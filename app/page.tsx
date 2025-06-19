@@ -319,14 +319,7 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
   }));
 };
   
-  const toggleTeaSelection = (category: keyof TeaSelections, value: string) => {
-    setTeaSelections(prev => ({
-      ...prev,
-      [category]: prev[category].includes(value)
-        ? prev[category].filter(item => item !== value)
-        : [...prev[category], value]
-    }));
-  };
+
 
   const toggleExerciseSelection = (category: keyof ExerciseSelections, value: string) => {
     setExerciseSelections(prev => ({
