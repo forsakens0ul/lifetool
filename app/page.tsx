@@ -320,7 +320,6 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
 };
   
 
-
   const toggleExerciseSelection = (category: keyof ExerciseSelections, value: string) => {
     setExerciseSelections(prev => ({
       ...prev,
