@@ -1,0 +1,517 @@
+{
+  "coffee_recipes": [
+    {
+      "id": 1,
+      "name": "焦糖拿铁（意式机版）",
+      "difficulty": "★★☆☆☆",
+      "time": "5-8分钟",
+      "servings": "1人份",
+      "description": "适合甜点搭配",
+      "emoji": "🍰",
+      "subtitle": "适合甜点搭配",
+      "tools": ["意式浓缩机", "电子秤", "奶缸"],
+      "ingredients": [
+        {"name": "深烘焙拼配豆", "amount": "18g", "note": "约意式勺2平勺"},
+        {"name": "焦糖酱", "amount": "15g", "note": "瓶装酱约1汤匙"},
+        {"name": "全脂牛奶", "amount": "200ml", "note": "冷藏直用"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "磨粉",
+          "detail": "将18g豆磨成细盐状（意式专用研磨度）",
+          "warning": "太粗会导致萃取不足，流速过快"
+        },
+        {
+          "step": 2,
+          "action": "填压",
+          "detail": "粉碗装粉后用手抹平，用30磅力垂直压平",
+          "visual_clue": "压完表面应光滑无裂缝"
+        },
+        {
+          "step": 3,
+          "action": "萃取",
+          "detail": "92℃水温，25秒萃取36ml咖啡液",
+          "abnormal": "流速过快（<20秒）：调细研磨；过慢（>30秒）：调粗研磨"
+        },
+        {
+          "step": 4,
+          "action": "打奶",
+          "detail": "蒸汽管插入牛奶1cm深，先加热至40℃（手感微温），再打发至65℃（烫手但能忍）",
+          "sound_clue": "初期持续嘶嘶声，后期出现纸张撕裂声"
+        },
+        {
+          "step": 5,
+          "action": "组合",
+          "detail": "杯底挤焦糖酱 → 倒入牛奶 → 缓慢注入浓缩 → 拉花（可选）",
+          "pro_tip": "用勺子挡住奶泡流可做出清晰分层"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "橙C美式（手冲冰镇版）",
+      "difficulty": "★★★☆☆",
+      "time": "8-12分钟",
+      "servings": "1人份",
+      "description": "早晨提神首选",
+      "emoji": "⚡",
+      "subtitle": "早晨提神首选",
+      "tools": ["V60滤杯", "电子秤", "温度计", "分享壶"],
+      "ingredients": [
+        {"name": "浅烘焙耶加雪菲", "amount": "15g", "note": "柑橘风味突出"},
+        {"name": "鲜橙汁", "amount": "120ml", "note": "推荐农夫山泉NFC"},
+        {"name": "冰块", "amount": "150g", "note": "约杯子7分满"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "折滤纸",
+          "detail": "V60滤纸接缝处反向折叠，用热水浸湿去纸味",
+          "warning": "未预湿滤纸会有木头味"
+        },
+        {
+          "step": 2,
+          "action": "焖蒸",
+          "detail": "注入50ml/96℃水，等待30秒",
+          "success_sign": "咖啡粉层应膨胀像蘑菇"
+        },
+        {
+          "step": 3,
+          "action": "分段注水",
+          "detail": "中心画硬币大小圈注水至150ml，水位下降后再注至225ml",
+          "time_control": "总时长控制在2分30秒±5秒"
+        },
+        {
+          "step": 4,
+          "action": "冰镇",
+          "detail": "立刻把分享壶坐冰水浴3分钟（快速降温锁香）",
+          "temp_target": "咖啡液需降至10℃以下"
+        },
+        {
+          "step": 5,
+          "action": "组合",
+          "detail": "杯中加入橙汁冰块 → 倒入冰咖啡 → 插橙片装饰",
+          "drink_tip": "前3口不要搅拌，体验渐变风味"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Dirty咖啡",
+      "difficulty": "★★☆☆☆",
+      "time": "6-10分钟",
+      "servings": "1人份",
+      "description": "下午茶推荐",
+      "emoji": "🧊",
+      "subtitle": "下午茶推荐",
+      "tools": ["意式浓缩机", "高脚杯", "电子秤"],
+      "ingredients": [
+        {"name": "中深烘焙豆", "amount": "18g", "note": "推荐巴西或哥伦比亚"},
+        {"name": "全脂牛奶", "amount": "150ml", "note": "冷藏备用"},
+        {"name": "冰块", "amount": "100g", "note": "大块冰效果更佳"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "准备冰牛奶",
+          "detail": "将牛奶和冰块混合，搅拌至4℃",
+          "visual_clue": "牛奶表面应有轻微雾气"
+        },
+        {
+          "step": 2,
+          "action": "萃取浓缩",
+          "detail": "按标准意式流程萃取双份浓缩（36ml）",
+          "temp_note": "浓缩温度应在85-90℃"
+        },
+        {
+          "step": 3,
+          "action": "分层倒入",
+          "detail": "先倒冰牛奶至杯子8分满，然后缓慢倒入热浓缩",
+          "pro_tip": "用勺子背面缓冲可做出完美分层"
+        },
+        {
+          "step": 4,
+          "action": "观察分层",
+          "detail": "上层深色浓缩，下层白色牛奶，中间有渐变层",
+          "drink_tip": "第一口不搅拌，体验温度对比"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "400次泡沫咖啡（Dalgona Coffee）",
+      "difficulty": "★☆☆☆☆",
+      "time": "5-8分钟",
+      "servings": "1人份",
+      "description": "网红打卡必备",
+      "emoji": "☁️",
+      "subtitle": "网红打卡必备",
+      "tools": ["电动打蛋器", "耐热玻璃碗", "量勺"],
+      "ingredients": [
+        {"name": "速溶咖啡粉", "amount": "2大勺", "note": "必须纯黑速溶，三合一不行"},
+        {"name": "白砂糖", "amount": "2大勺", "note": "与咖啡粉1:1"},
+        {"name": "热水", "amount": "2大勺", "note": "刚好溶解糖的量"},
+        {"name": "牛奶", "amount": "200ml", "note": "冰牛奶效果最佳"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "混合",
+          "detail": "咖啡粉+糖+热水放入碗中，搅拌至无颗粒",
+          "warning": "水温低于60℃会导致无法打发"
+        },
+        {
+          "step": 2,
+          "action": "打发",
+          "detail": "电动打蛋器高速打发3分钟",
+          "success_sign": "颜色变浅黄，提起打蛋头有鹰嘴钩"
+        },
+        {
+          "step": 3,
+          "action": "组装",
+          "detail": "杯中加冰牛奶至8分满，舀入咖啡泡沫",
+          "pro_tip": "用勺子背辅助造型可做出云朵效果"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "姜汁拿铁（冬季暖饮）",
+      "difficulty": "★★☆☆☆",
+      "time": "8-12分钟",
+      "servings": "1人份",
+      "description": "冬季暖胃首选",
+      "emoji": "🌶️",
+      "subtitle": "冬季暖胃首选",
+      "tools": ["小奶锅", "滤网"],
+      "ingredients": [
+        {"name": "鲜姜", "amount": "20g", "note": "约拇指大小"},
+        {"name": "红糖", "amount": "15g", "note": "深色红糖风味更浓"},
+        {"name": "牛奶", "amount": "250ml", "note": "全脂奶更顺滑"},
+        {"name": "浓缩咖啡", "amount": "30ml", "note": "可用挂耳包替代"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "制姜汁",
+          "detail": "生姜去皮磨蓉，纱布包裹挤出汁（约得5ml）",
+          "pro_tip": "可用瓶装姜汁替代，但鲜姜更辛辣"
+        },
+        {
+          "step": 2,
+          "action": "煮姜奶",
+          "detail": "牛奶+红糖小火加热至微烟（约70℃），关火拌入姜汁",
+          "warning": "超过80℃会破坏姜辣素"
+        },
+        {
+          "step": 3,
+          "action": "融合",
+          "detail": "杯中先倒姜奶，再缓慢注入咖啡",
+          "pro_tip": "用勺子背引流可形成渐变层"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "彩虹分层冰咖",
+      "difficulty": "★★★☆☆",
+      "time": "15-20分钟",
+      "servings": "1人份",
+      "description": "颜值爆表特饮",
+      "emoji": "🌈",
+      "subtitle": "颜值爆表特饮",
+      "tools": ["雪克杯", "吧勺", "窄口高杯"],
+      "ingredients": [
+        {"name": "蝶豆花", "amount": "5朵", "note": "天然蓝色色素"},
+        {"name": "荔枝糖浆", "amount": "10ml", "note": "透明质地最佳"},
+        {"name": "冷萃咖啡", "amount": "100ml", "note": "浅烘焙豆更清爽"},
+        {"name": "椰奶", "amount": "50ml", "note": "冷藏后易分层"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "染蓝色层",
+          "detail": "蝶豆花用50ml热水泡3分钟，滤出液加糖浆冷却",
+          "success_sign": "应呈现透亮湖蓝色"
+        },
+        {
+          "step": 2,
+          "action": "构建分层",
+          "detail": "按顺序缓慢倒入：1/3杯冰块→椰奶→咖啡→蓝色糖浆",
+          "technique": "每层用吧勺缓冲，流速1滴/秒"
+        },
+        {
+          "step": 3,
+          "action": "定型",
+          "detail": "静止3分钟让层次稳定",
+          "warning": "若混色说明温差不够，需冷藏原料"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "奥利奥阿芙佳朵",
+      "difficulty": "★☆☆☆☆",
+      "time": "3-5分钟",
+      "servings": "1人份",
+      "description": "甜品控最爱",
+      "emoji": "🍦",
+      "subtitle": "甜品控最爱",
+      "tools": ["研磨器", "冰淇淋勺"],
+      "ingredients": [
+        {"name": "奥利奥饼干", "amount": "3块", "note": "去掉夹心"},
+        {"name": "香草冰淇淋", "amount": "1球", "note": "约60g"},
+        {"name": "浓缩咖啡", "amount": "30ml", "note": "可用速溶黑咖啡2倍浓度替代"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "处理饼干",
+          "detail": "饼干装袋擀碎，分粗碎（装饰用）和细粉（基底用）",
+          "pro_tip": "可用现成奥利奥碎"
+        },
+        {
+          "step": 2,
+          "action": "组装",
+          "detail": "杯底铺细粉→放冰淇淋→淋咖啡→撒粗碎",
+          "timing": "咖啡需冷却至60℃以下防止冰淇淋过快融化"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "气泡美式（夏日限定）",
+      "difficulty": "★★☆☆☆",
+      "time": "5-8分钟",
+      "servings": "1人份",
+      "description": "清爽解腻神器",
+      "emoji": "🫧",
+      "subtitle": "清爽解腻神器",
+      "tools": ["雪克杯", "碳酸水机"],
+      "ingredients": [
+        {"name": "柠檬", "amount": "2片", "note": "厚度约3mm"},
+        {"name": "冷萃咖啡", "amount": "80ml", "note": "中深烘焙更平衡"},
+        {"name": "气泡水", "amount": "120ml", "note": "现打的气泡更持久"},
+        {"name": "接骨木糖浆", "amount": "5ml", "note": "可选"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预调",
+          "detail": "雪克杯加冰+柠檬片轻捣5下出汁",
+          "warning": "过度捣压会发苦"
+        },
+        {
+          "step": 2,
+          "action": "混合",
+          "detail": "加入咖啡和糖浆，摇荡10秒",
+          "purpose": "让液体充分融合但不过度稀释"
+        },
+        {
+          "step": 3,
+          "action": "冲气",
+          "detail": "倒入杯中后，缓慢注入气泡水",
+          "success_sign": "理想状态应产生2cm厚泡沫层"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "棉花糖摩卡（儿童友好版）",
+      "difficulty": "★☆☆☆☆",
+      "time": "3-5分钟",
+      "servings": "1人份",
+      "description": "亲子时光必备",
+      "emoji": "🧸",
+      "subtitle": "亲子时光必备",
+      "tools": ["微波炉", "马克杯"],
+      "ingredients": [
+        {"name": "黑巧克力", "amount": "15g", "note": "可可含量60-70%"},
+        {"name": "牛奶", "amount": "200ml", "note": "加热至60℃"},
+        {"name": "速溶咖啡", "amount": "1小包", "note": "约2g"},
+        {"name": "棉花糖", "amount": "3颗", "note": "迷你款更易融化"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "融化巧克力",
+          "detail": "巧克力掰碎+10ml牛奶，微波炉中火30秒",
+          "check": "搅拌后应呈光滑酱状"
+        },
+        {
+          "step": 2,
+          "action": "调和",
+          "detail": "加入剩余牛奶和咖啡粉，搅拌至无颗粒",
+          "temp_target": "液体温度应保持在50-60℃"
+        },
+        {
+          "step": 3,
+          "action": "装饰",
+          "detail": "表面放棉花糖，微波炉高火5秒",
+          "effect": "棉花糖会微微塌陷形成拉丝"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "摩卡壶安全操作指南",
+      "difficulty": "★★☆☆☆",
+      "time": "8-12分钟",
+      "servings": "2-3人份",
+      "description": "经典意式风味",
+      "emoji": "🫖",
+      "subtitle": "经典意式风味",
+      "warning": "❗必须阅读安全守则",
+      "safety": [
+        "加水不超过泄压阀下5mm",
+        "手柄必须旋紧到完全对齐",
+        "加热时壶盖保持打开状态",
+        "离火后立即用湿毛巾包裹下壶"
+      ],
+      "tools": ["摩卡壶", "磨豆机", "湿毛巾"],
+      "ingredients": [
+        {"name": "中深烘焙豆", "amount": "18g", "note": "研磨度略粗于意式"},
+        {"name": "常温水", "amount": "120ml", "note": "至泄压阀下5mm"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "装水",
+          "detail": "下壶加常温水至阀下5mm（约120ml）",
+          "tool": "可用瓶装水直接倒到阀底"
+        },
+        {
+          "step": 2,
+          "action": "填粉",
+          "detail": "粉碗自然装满不压实（约18g）",
+          "visual_check": "粉面应略高于粉碗边缘"
+        },
+        {
+          "step": 3,
+          "action": "加热",
+          "detail": "中小火加热，听到剧烈气泡声时开始计时30秒",
+          "abnormal": "超过1分钟不出液应立即关火"
+        },
+        {
+          "step": 4,
+          "action": "离火",
+          "detail": "当咖啡液呈蜂蜜状缓慢流出时关火",
+          "output": "正常出液量约40-60ml"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "冰滴咖啡",
+      "difficulty": "★★★★☆",
+      "time": "12-24小时",
+      "servings": "4-6人份",
+      "description": "夏日清爽特饮",
+      "emoji": "❄️",
+      "subtitle": "夏日清爽特饮",
+      "tools": ["冰滴壶", "磨豆机", "滤纸", "密封瓶"],
+      "ingredients": [
+        {"name": "中浅烘焙豆", "amount": "60g", "note": "推荐埃塞俄比亚或肯尼亚"},
+        {"name": "冰块", "amount": "500g", "note": "需要持续补充"},
+        {"name": "常温水", "amount": "100ml", "note": "用于润湿咖啡粉"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "准备咖啡粉",
+          "detail": "将60g豆磨成中粗研磨（类似粗盐）",
+          "warning": "过细会导致萃取过度，过粗萃取不足"
+        },
+        {
+          "step": 2,
+          "action": "装填咖啡粉",
+          "detail": "在粉槽底部铺滤纸，倒入咖啡粉，轻拍平整",
+          "pro_tip": "用少量常温水润湿表面，避免冰水直接冲击"
+        },
+        {
+          "step": 3,
+          "action": "调节滴速",
+          "detail": "调节阀门至每秒1滴的速度",
+          "time_control": "按此速度，500ml冰水需要12-16小时滴完"
+        },
+        {
+          "step": 4,
+          "action": "收集咖啡液",
+          "detail": "萃取完成后立即密封冷藏，可保存3-5天",
+          "drink_tip": "饮用时可加冰块或牛奶调节浓度"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "法压壶咖啡",
+      "difficulty": "★☆☆☆☆",
+      "time": "4-6分钟",
+      "servings": "2-4人份",
+      "description": "简单易上手",
+      "emoji": "☕",
+      "subtitle": "简单易上手",
+      "tools": ["法压壶", "磨豆机", "计时器", "搅拌勺"],
+      "ingredients": [
+        {"name": "中烘焙豆", "amount": "30g", "note": "约2汤匙"},
+        {"name": "热水", "amount": "500ml", "note": "90-95℃"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预热器具",
+          "detail": "用热水冲洗法压壶，倒掉预热水",
+          "purpose": "保持萃取温度稳定"
+        },
+        {
+          "step": 2,
+          "action": "加入咖啡粉",
+          "detail": "将30g中粗研磨咖啡粉倒入壶中",
+          "warning": "研磨度如粗盐粒大小"
+        },
+        {
+          "step": 3,
+          "action": "注水焖蒸",
+          "detail": "倒入少量热水润湿咖啡粉，搅拌30秒",
+          "success_sign": "咖啡粉会膨胀并释放香气"
+        },
+        {
+          "step": 4,
+          "action": "完全注水",
+          "detail": "倒入剩余热水至壶肩位置，盖上盖子但不压下",
+          "time_control": "静置4分钟"
+        },
+        {
+          "step": 5,
+          "action": "压滤",
+          "detail": "缓慢匀速下压滤网至底部",
+          "warning": "用力过猛会导致过萃，产生苦味"
+        },
+        {
+          "step": 6,
+          "action": "立即享用",
+          "detail": "压滤完成后立即倒出，避免继续萃取",
+          "drink_tip": "可根据个人喜好添加牛奶或糖"
+        }
+      ]
+    }
+  ],
+  "pro_tips": {
+    "分层技巧": "密度大的液体先倒，每层加冰块可增强分层效果",
+    "温度控制": "没有温度计时，煮沸的水静置1分钟约90℃，2分钟约85℃",
+    "应急替代": "无浓缩咖啡可用2倍浓度速溶黑咖啡+1小撮盐模拟"
+  },
+  "metadata": {
+    "temperature_guide": {
+      "意式浓缩": "90-94℃",
+      "手冲咖啡": "88-96℃（浅烘用高温，深烘用低温）",
+      "冷萃咖啡": "室温/冷藏4℃"
+    },
+    "conversion_tools": {
+      "1g咖啡粉 ≈ 0.2茶匙": "",
+      "1ml水 ≈ 1克（室温下）": "",
+      "标准意式勺": "7-9g/勺"
+    }
+  }
+}
