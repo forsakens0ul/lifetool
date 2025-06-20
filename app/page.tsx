@@ -1,908 +1,1772 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState, useEffect } from 'react';
+import { Coffee, ChefHat, Utensils, Dumbbell , Languages, Sprout, RefreshCw, Clock, Users, AlertTriangle, Github, Globe, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, Star, Thermometer, Timer, AlertTriangle, Dumbbell, Play } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
-// 咖啡相关数据
-const coffeeTypes = [
-  { id: 'espresso', name: '意式浓缩', emoji: '☕', description: '浓郁醇厚' },
-  { id: 'americano', name: '美式咖啡', emoji: '🇺🇸', description: '清淡顺滑' },
-  { id: 'latte', name: '拿铁', emoji: '🥛', description: '奶香浓郁' },
-  { id: 'cappuccino', name: '卡布奇诺', emoji: '☁️', description: '奶泡丰富' },
-  { id: 'mocha', name: '摩卡', emoji: '🍫', description: '巧克力风味' },
-  { id: 'macchiato', name: '玛奇朵', emoji: '🎨', description: '层次分明' }
-];
+interface CoffeeSelections {
+  bean: string;
+  tool: string;
+  additions: string[];
+}
 
-const brewMethods = [
-  { id: 'espresso_machine', name: '意式机', emoji: '⚡', description: '高压萃取' },
-  { id: 'french_press', name: '法压壶', emoji: '🫖', description: '浸泡萃取' },
-  { id: 'pour_over', name: '手冲', emoji: '💧', description: '滴滤萃取' },
-  { id: 'aeropress', name: '爱乐压', emoji: '🔄', description: '压力萃取' },
-  { id: 'moka_pot', name: '摩卡壶', emoji: '🏺', description: '蒸汽萃取' },
-  { id: 'cold_brew', name: '冷萃', emoji: '🧊', description: '冷水萃取' }
-];
+interface TeaSelections {
+  teaTypes: string;      // 原来是 string[]
+  brewMethods: string;   // 原来是 string[]
+  temperature: string;   // 原来是 string[]
+  accessories: string;   // 原来是 string[]
+}
 
-const coffeeAddons = [
-  { id: 'milk', name: '牛奶', emoji: '🥛' },
-  { id: 'sugar', name: '糖', emoji: '🍬' },
-  { id: 'cream', name: '奶油', emoji: '🍦' },
-  { id: 'syrup', name: '糖浆', emoji: '🍯' },
-  { id: 'cinnamon', name: '肉桂', emoji: '🌿' },
-  { id: 'vanilla', name: '香草', emoji: '🌸' }
-];
+interface ExerciseSelections {
+  bodyParts: string[];
+  equipment: string[];
+  intensity: string[];
+  duration: string[];
+}
 
-// 茶饮相关数据
-const teaTypes = [
-  { id: 'green', name: '绿茶', emoji: '🍃', temp: '75-85°C', time: '2-3分钟', description: '清香淡雅' },
-  { id: 'black', name: '红茶', emoji: '🔴', temp: '90-100°C', time: '3-5分钟', description: '浓郁醇厚' },
-  { id: 'oolong', name: '乌龙茶', emoji: '🟤', temp: '85-95°C', time: '3-7分钟', description: '半发酵茶' },
-  { id: 'white', name: '白茶', emoji: '⚪', temp: '85-90°C', time: '4-6分钟', description: '清淡甘甜' },
-  { id: 'puer', name: '普洱茶', emoji: '🟫', temp: '95-100°C', time: '5-8分钟', description: '陈香浓郁' },
-  { id: 'herbal', name: '花草茶', emoji: '🌸', temp: '80-90°C', time: '5-10分钟', description: '天然花香' }
-];
+interface CoffeeRecipe {
+  bean: string;
+  tool: string;
+  addition: string;
+  result: string;
+}
 
-const teaBrewMethods = [
-  { id: 'gongfu', name: '功夫茶', emoji: '🫖', description: '小壶多次冲泡' },
-  { id: 'western', name: '西式冲泡', emoji: '☕', description: '大杯一次冲泡' },
-  { id: 'cold', name: '冷泡茶', emoji: '🧊', description: '冷水长时间浸泡' },
-  { id: 'milk', name: '奶茶制作', emoji: '🥛', description: '加奶调制' }
-];
+interface TeaRecipe {
+  tea: string;
+  tool: string;
+  addition: string;
+  result: string;
+}
 
-const teaAccessories = [
-  { id: 'honey', name: '蜂蜜', emoji: '🍯' },
-  { id: 'lemon', name: '柠檬', emoji: '🍋' },
-  { id: 'milk', name: '牛奶', emoji: '🥛' },
-  { id: 'sugar', name: '糖', emoji: '🍬' },
-  { id: 'mint', name: '薄荷', emoji: '🌿' },
-  { id: 'ginger', name: '生姜', emoji: '🫚' }
-];
+interface CoffeeRecommendation {
+  id: number;
+  name: string;
+  emoji: string;
+  subtitle: string;
+  difficulty: string;
+  warning?: string;
+  safety?: string[];
+  tools: string[];
+  ingredients: Array<{
+    name: string;
+    amount: string;
+    note: string;
+  }>;
+  steps: Array<{
+    step: number;
+    action: string;
+    detail: string;
+    warning?: string;
+    visual_clue?: string;
+    success_sign?: string;
+    abnormal?: string;
+    sound_clue?: string;
+    pro_tip?: string;
+    time_control?: string;
+    temp_target?: string;
+    drink_tip?: string;
+    visual_check?: string;
+    timing?: string;
+    effect?: string;
+    tool?: string;
+    output?: string;
+    check?: string;
+    technique?: string;
+    purpose?: string;
+    grind_size?: string;
+  }>;
+}
 
-// 运动相关数据
-const bodyParts = [
-  { id: 'chest', name: '胸部', emoji: '💪', description: '胸大肌、胸小肌' },
-  { id: 'back', name: '背部', emoji: '🔙', description: '背阔肌、斜方肌' },
-  { id: 'shoulders', name: '肩部', emoji: '🤲', description: '三角肌、肩袖' },
-  { id: 'arms', name: '手臂', emoji: '💪', description: '二头肌、三头肌' },
-  { id: 'core', name: '核心', emoji: '🎯', description: '腹肌、腰部' },
-  { id: 'legs', name: '腿部', emoji: '🦵', description: '大腿、小腿' },
-  { id: 'glutes', name: '臀部', emoji: '🍑', description: '臀大肌、臀中肌' },
-  { id: 'cardio', name: '有氧', emoji: '❤️', description: '心肺功能训练' }
-];
+interface TeaRecommendation {
+  id: number;
+  name: string;
+  emoji: string;
+  subtitle: string;
+  difficulty: string;
+  warning?: string;
+  safety?: string[];
+  tools: string[];
+  ingredients: Array<{
+    name: string;
+    amount: string;
+    note: string;
+  }>;
+  steps: Array<{
+    step: number;
+    action: string;
+    detail: string;
+    warning?: string;
+    visual_clue?: string;
+    success_sign?: string;
+    abnormal?: string;
+    sound_clue?: string;
+    pro_tip?: string;
+    time_control?: string;
+    temp_target?: string;
+    drink_tip?: string;
+    visual_check?: string;
+    timing?: string;
+    effect?: string;
+    tool?: string;
+    output?: string;
+    check?: string;
+    technique?: string;
+    purpose?: string;
+  }>;
+}
 
-const equipment = [
-  { id: 'bodyweight', name: '徒手', emoji: '🤸', description: '无需器材' },
-  { id: 'dumbbells', name: '哑铃', emoji: '🏋️', description: '可调节重量' },
-  { id: 'resistance', name: '弹力带', emoji: '🎗️', description: '便携阻力训练' },
-  { id: 'kettlebell', name: '壶铃', emoji: '⚖️', description: '功能性训练' },
-  { id: 'barbell', name: '杠铃', emoji: '🏋️‍♂️', description: '大重量训练' },
-  { id: 'machine', name: '器械', emoji: '🏃‍♂️', description: '健身房器械' },
-  { id: 'yoga', name: '瑜伽垫', emoji: '🧘', description: '地面训练' },
-  { id: 'cardio', name: '有氧器械', emoji: '🚴', description: '跑步机、单车等' }
-];
-
-const intensityLevels = [
-  { id: 'low', name: '低强度', emoji: '🟢', description: 'RPE 3-4，轻松对话' },
-  { id: 'moderate', name: '中强度', emoji: '🟡', description: 'RPE 5-6，稍感吃力' },
-  { id: 'high', name: '高强度', emoji: '🟠', description: 'RPE 7-8，明显吃力' },
-  { id: 'extreme', name: '极高强度', emoji: '🔴', description: 'RPE 9-10，接近极限' }
-];
-
-const durations = [
-  { id: '15min', name: '15分钟', emoji: '⏱️', description: '快速训练' },
-  { id: '30min', name: '30分钟', emoji: '⏰', description: '标准训练' },
-  { id: '45min', name: '45分钟', emoji: '🕐', description: '充分训练' },
-  { id: '60min', name: '60分钟', emoji: '🕑', description: '完整训练' }
-];
-
-// 训练视频链接
-const trainingVideos = {
-  chest: 'https://www.bilibili.com/video/BV1GJ411x7h7', // 胸部训练
-  back: 'https://www.bilibili.com/video/BV1564y1q7X5', // 背部训练
-  shoulders: 'https://www.bilibili.com/video/BV1Lh411B7HP', // 肩部训练
-  arms: 'https://www.bilibili.com/video/BV1yh411B7nP', // 手臂训练
-  core: 'https://www.bilibili.com/video/BV1Zh411B7qP', // 核心训练
-  legs: 'https://www.bilibili.com/video/BV1fh411B7sP', // 腿部训练
-  glutes: 'https://www.bilibili.com/video/BV1Th411B7tP', // 臀部训练
-  cardio: 'https://www.bilibili.com/video/BV1Rh411B7uP' // 有氧训练
-};
+interface SportRecommendation {
+  id: number;
+  name: string;
+  emoji: string;
+  subtitle: string;
+  difficulty: string;
+  warning?: string;
+  safety?: string[];
+  tools: string[];
+  ingredients: Array<{
+    name: string;
+    amount: string;
+    note: string;
+  }>;
+  steps: Array<{
+    step: number;
+    action: string;
+    detail: string;
+    warning?: string;
+    visual_clue?: string;
+    success_sign?: string;
+    abnormal?: string;
+    sound_clue?: string;
+    pro_tip?: string;
+    time_control?: string;
+    temp_target?: string;
+    drink_tip?: string;
+    visual_check?: string;
+    timing?: string;
+    effect?: string;
+    tool?: string;
+    output?: string;
+    check?: string;
+    technique?: string;
+    purpose?: string;
+  }>;
+}
 
 export default function Home() {
-  // 咖啡状态
-  const [selectedCoffeeType, setSelectedCoffeeType] = useState<string>('');
-  const [selectedBrewMethod, setSelectedBrewMethod] = useState<string>('');
-  const [selectedCoffeeAddons, setSelectedCoffeeAddons] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState(0);
+  const [coffeeRecipes, setCoffeeRecipes] = useState<CoffeeRecipe[]>([]);
+  const [teaRecipes, setTeaRecipes] = useState<TeaRecipe[]>([]);
+  const [generatedRecipe, setGeneratedRecipe] = useState<string>('');
+  const [coffeeTitle, setCoffeeTitle] = useState<string>('');
+  const [coffeeDescription, setCoffeeDescription] = useState<string>('');
+  const [generatedTeaRecipe, setGeneratedTeaRecipe] = useState<string>('');
+  const [teaTitle, setTeaTitle] = useState<string>('');
+  const [teaDescription, setTeaDescription] = useState<string>('');
+  
+  // Coffee recommendations state
+  const [coffeeRecommendations, setCoffeeRecommendations] = useState<CoffeeRecommendation[]>([]);
+  const [displayedRecommendations, setDisplayedRecommendations] = useState<CoffeeRecommendation[]>([]);
+  const [selectedRecommendation, setSelectedRecommendation] = useState<CoffeeRecommendation | null>(null);
+  
+  // Tea recommendations state
+  const [teaRecommendations, setTeaRecommendations] = useState<TeaRecommendation[]>([]);
+  const [displayedTeaRecommendations, setDisplayedTeaRecommendations] = useState<TeaRecommendation[]>([]);
+  const [selectedTeaRecommendation, setSelectedTeaRecommendation] = useState<TeaRecommendation | null>(null);
+  
+  // Sport recommendations state
+  const [sportRecommendations, setSportRecommendations] = useState<SportRecommendation[]>([]);
+  const [displayedSportRecommendations, setDisplayedSportRecommendations] = useState<SportRecommendation[]>([]);
+  const [selectedSportRecommendation, setSelectedSportRecommendation] = useState<SportRecommendation | null>(null);
+  
+  // Coffee module state - simplified
+  const [coffeeSelections, setCoffeeSelections] = useState<CoffeeSelections>({
+    bean: '',
+    tool: '',
+    additions: []
+  });
 
-  // 茶饮状态
-  const [selectedTeaType, setSelectedTeaType] = useState<string>('');
-  const [selectedTeaBrewMethod, setSelectedTeaBrewMethod] = useState<string>('');
-  const [selectedTeaAccessories, setSelectedTeaAccessories] = useState<string[]>([]);
+  // Tea module state
+ const [teaSelections, setTeaSelections] = useState<TeaSelections>({
+  teaTypes: "",       // 从 [] 改为 ""
+  brewMethods: "",    // 从 [] 改为 "" 
+  temperature: "",    // 从 [] 改为 ""
+  accessories: ""     // 从 [] 改为 ""
+});
 
-  // 运动状态
-  const [selectedBodyParts, setSelectedBodyParts] = useState<string[]>([]);
-  const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
-  const [selectedIntensity, setSelectedIntensity] = useState<string>('');
-  const [selectedDuration, setSelectedDuration] = useState<string>('');
+  // Exercise module state
+  const [exerciseSelections, setExerciseSelections] = useState<ExerciseSelections>({
+    bodyParts: [],
+    equipment: [],
+    intensity: [],
+    duration: []
+  });
 
-  // 生成咖啡配方
-  const generateCoffeeRecipe = () => {
-    if (!selectedCoffeeType || !selectedBrewMethod) return null;
-
-    const coffeeType = coffeeTypes.find(c => c.id === selectedCoffeeType);
-    const brewMethod = brewMethods.find(b => b.id === selectedBrewMethod);
-    const selectedAddonItems = coffeeAddons.filter(a => selectedCoffeeAddons.includes(a.id));
-
-    if (!coffeeType || !brewMethod) return null;
-
-    // 根据咖啡类型和冲泡方法生成参数
-    const getBrewParams = () => {
-      const params = {
-        ratio: '1:15',
-        temperature: '90-95°C',
-        time: '3-4分钟',
-        grind: '中等研磨'
-      };
-
-      if (brewMethod.id === 'espresso_machine') {
-        params.ratio = '1:2';
-        params.temperature = '90-94°C';
-        params.time = '25-30秒';
-        params.grind = '细研磨';
-      } else if (brewMethod.id === 'french_press') {
-        params.ratio = '1:12';
-        params.temperature = '90-95°C';
-        params.time = '4分钟';
-        params.grind = '粗研磨';
-      } else if (brewMethod.id === 'pour_over') {
-        params.ratio = '1:16';
-        params.temperature = '88-92°C';
-        params.time = '2.5-3.5分钟';
-        params.grind = '中细研磨';
-      } else if (brewMethod.id === 'cold_brew') {
-        params.ratio = '1:8';
-        params.temperature = '室温';
-        params.time = '12-24小时';
-        params.grind = '粗研磨';
-      }
-
-      return params;
-    };
-
-    return {
-      coffeeType,
-      brewMethod,
-      addons: selectedAddonItems,
-      params: getBrewParams()
-    };
+  // Get current date for version info
+  const getCurrentDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1; // getMonth() returns 0-11
+    return `${year}年${month}月`;
   };
 
-  // 生成茶饮配方
-  const generateTeaRecipe = () => {
-    if (!selectedTeaType || !selectedTeaBrewMethod) return null;
+  // Load coffee recipes from JSON
+  useEffect(() => {
+    fetch('/data/coffee_recipes_detailed.json')
+      .then(response => response.json())
+      .then(data => setCoffeeRecipes(data))
+      .catch(error => console.error('Error loading coffee recipes:', error));
+  }, []);
 
-    const teaType = teaTypes.find(t => t.id === selectedTeaType);
-    const brewMethod = teaBrewMethods.find(b => b.id === selectedTeaBrewMethod);
-    const selectedAccessoryItems = teaAccessories.filter(a => selectedTeaAccessories.includes(a.id));
+  // Load tea recipes from JSON
+  useEffect(() => {
+    fetch('/data/tea_recipes_detailed.json')
+      .then(response => response.json())
+      .then(data => setTeaRecipes(data))
+      .catch(error => console.error('Error loading tea recipes:', error));
+  }, []);
 
-    if (!teaType || !brewMethod) return null;
+  // Load coffee recommendations
+  useEffect(() => {
+    fetch('/data/coffee_recommendations.json')
+      .then(response => response.json())
+      .then(data => {
+        setCoffeeRecommendations(data.coffee_recipes);
+        // Initially display 3 random recommendations
+        const shuffled = [...data.coffee_recipes].sort(() => 0.5 - Math.random());
+        setDisplayedRecommendations(shuffled.slice(0, 3));
+      })
+      .catch(error => console.error('Error loading coffee recommendations:', error));
+  }, []);
 
-    return {
-      teaType,
-      brewMethod,
-      accessories: selectedAccessoryItems,
-      temperature: teaType.temp,
-      time: teaType.time
-    };
-  };
+  // Load tea recommendations
+  useEffect(() => {
+    fetch('/data/tea_recommendations.json')
+      .then(response => response.json())
+      .then(data => {
+        setTeaRecommendations(data.tea_recipes);
+        // Initially display 3 random recommendations
+        const shuffled = [...data.tea_recipes].sort(() => 0.5 - Math.random());
+        setDisplayedTeaRecommendations(shuffled.slice(0, 3));
+      })
+      .catch(error => console.error('Error loading tea recommendations:', error));
+  }, []);
 
-  // 生成运动计划
-  const generateSportPlan = () => {
-    if (selectedBodyParts.length === 0 || selectedEquipment.length === 0 || !selectedIntensity || !selectedDuration) {
-      return null;
+  // Load sport recommendations
+  useEffect(() => {
+    fetch('/data/sport_recommendations.json')
+      .then(response => response.json())
+      .then(data => {
+        setSportRecommendations(data.sport_recipes);
+        // Initially display 3 random recommendations
+        const shuffled = [...data.sport_recipes].sort(() => 0.5 - Math.random());
+        setDisplayedSportRecommendations(shuffled.slice(0, 3));
+      })
+      .catch(error => console.error('Error loading sport recommendations:', error));
+  }, []);
+
+  // Auto-generate recipe when selections are complete
+  useEffect(() => {
+    if (coffeeSelections.bean && coffeeSelections.tool && coffeeRecipes.length > 0) {
+      generateCoffeeRecipe();
+    } else {
+      setGeneratedRecipe('');
+      setCoffeeTitle('');
+      setCoffeeDescription('');
     }
+  }, [coffeeSelections.bean, coffeeSelections.tool, coffeeSelections.additions, coffeeRecipes]);
 
-    const bodyPartItems = bodyParts.filter(bp => selectedBodyParts.includes(bp.id));
-    const equipmentItems = equipment.filter(eq => selectedEquipment.includes(eq.id));
-    const intensityItem = intensityLevels.find(il => il.id === selectedIntensity);
-    const durationItem = durations.find(d => d.id === selectedDuration);
+  // Auto-generate tea recipe when selections are complete
+  useEffect(() => {
+    if (teaSelections.teaTypes && teaSelections.brewMethods && teaRecipes.length > 0) {
+      generateTeaRecipe();
+    } else {
+      setGeneratedTeaRecipe('');
+      setTeaTitle('');
+      setTeaDescription('');
+    }
+  }, [teaSelections.teaTypes, teaSelections.brewMethods, teaSelections.temperature, teaSelections.accessories, teaRecipes]);
 
-    if (!intensityItem || !durationItem) return null;
+  const tabs = [
+    { id: 0, name: '咖啡冲煮', icon: Coffee, color: 'amber' },
+    { id: 1, name: '泡茶教程', icon: Sprout, color: 'green' },
+    { id: 2, name: '运动健身', icon: Dumbbell, color: 'blue' }
+  ];
 
-    // 根据选择生成训练计划
-    const exercises = generateExercises(bodyPartItems, equipmentItems, intensityItem, durationItem);
-    
-    return {
-      bodyParts: bodyPartItems,
-      equipment: equipmentItems,
-      intensity: intensityItem,
-      duration: durationItem,
-      exercises
-    };
+  const setCoffeeBean = (bean: string) => {
+    setCoffeeSelections(prev => ({ ...prev, bean }));
   };
 
-  // 生成具体练习动作
-  const generateExercises = (bodyParts: any[], equipment: any[], intensity: any, duration: any) => {
-    const exercises = [];
-    const timePerPart = parseInt(duration.id) / bodyParts.length;
-    
-    bodyParts.forEach((part, index) => {
-      const partExercises = getExercisesForBodyPart(part.id, equipment, intensity);
-      exercises.push({
-        bodyPart: part.name,
-        emoji: part.emoji,
-        time: `${Math.round(timePerPart)}分钟`,
-        exercises: partExercises,
-        videoUrl: trainingVideos[part.id as keyof typeof trainingVideos]
-      });
-    });
-
-    return exercises;
+  const setCoffeeTool = (tool: string) => {
+    setCoffeeSelections(prev => ({ ...prev, tool }));
   };
 
-  // 根据部位和器材获取练习动作
-  const getExercisesForBodyPart = (bodyPartId: string, equipment: any[], intensity: any) => {
-    const exerciseDatabase: Record<string, Record<string, string[]>> = {
-      chest: {
-        bodyweight: ['俯卧撑', '钻石俯卧撑', '宽距俯卧撑'],
-        dumbbells: ['哑铃卧推', '哑铃飞鸟', '上斜哑铃推举'],
-        resistance: ['弹力带夹胸', '弹力带推胸', '弹力带飞鸟'],
-        barbell: ['杠铃卧推', '上斜杠铃推举', '下斜杠铃推举']
-      },
-      back: {
-        bodyweight: ['引体向上', '反向划船', '超人式'],
-        dumbbells: ['哑铃划船', '单臂哑铃划船', '哑铃硬拉'],
-        resistance: ['弹力带划船', '弹力带下拉', '弹力带反向飞鸟'],
-        barbell: ['杠铃划船', '硬拉', '高位下拉']
-      },
-      shoulders: {
-        bodyweight: ['派克推举', '倒立撑', '肩部绕环'],
-        dumbbells: ['哑铃推举', '侧平举', '前平举'],
-        resistance: ['弹力带侧平举', '弹力带推举', '弹力带面拉'],
-        barbell: ['杠铃推举', '直立划船', '颈后推举']
-      },
-      arms: {
-        bodyweight: ['钻石俯卧撑', '三头肌撑体', '反向俯卧撑'],
-        dumbbells: ['哑铃弯举', '三头肌伸展', '锤式弯举'],
-        resistance: ['弹力带弯举', '弹力带三头伸展', '弹力带锤式弯举'],
-        barbell: ['杠铃弯举', '窄距卧推', '法式推举']
-      },
-      core: {
-        bodyweight: ['平板支撑', '卷腹', '俄罗斯转体'],
-        dumbbells: ['哑铃俄罗斯转体', '哑铃侧弯', '哑铃仰卧起坐'],
-        resistance: ['弹力带转体', '弹力带抗阻', '弹力带木砍'],
-        yoga: ['平板支撑', '侧平板', '死虫式']
-      },
-      legs: {
-        bodyweight: ['深蹲', '弓步蹲', '单腿深蹲'],
-        dumbbells: ['哑铃深蹲', '哑铃弓步', '哑铃提踵'],
-        resistance: ['弹力带深蹲', '弹力带侧步', '弹力带腿举'],
-        barbell: ['杠铃深蹲', '杠铃硬拉', '杠铃弓步']
-      },
-      glutes: {
-        bodyweight: ['臀桥', '单腿臀桥', '蚌式开合'],
-        dumbbells: ['哑铃臀桥', '哑铃硬拉', '哑铃侧步蹲'],
-        resistance: ['弹力带臀桥', '弹力带侧步', '弹力带蚌式'],
-        kettlebell: ['壶铃摆动', '壶铃深蹲', '壶铃硬拉']
-      },
-      cardio: {
-        bodyweight: ['开合跳', '高抬腿', '波比跳'],
-        cardio: ['跑步机', '椭圆机', '动感单车'],
-        resistance: ['弹力带有氧', '弹力带循环', '弹力带间歇'],
-        kettlebell: ['壶铃摆动', '壶铃推举', '壶铃深蹲跳']
-      }
-    };
-
-    const availableExercises: string[] = [];
-    equipment.forEach(eq => {
-      const exercises = exerciseDatabase[bodyPartId]?.[eq.id] || [];
-      availableExercises.push(...exercises);
-    });
-
-    // 根据强度调整练习数量
-    const exerciseCount = intensity.id === 'low' ? 2 : intensity.id === 'moderate' ? 3 : intensity.id === 'high' ? 4 : 5;
-    
-    return availableExercises.slice(0, exerciseCount).map(exercise => ({
-      name: exercise,
-      sets: intensity.id === 'low' ? '2-3组' : intensity.id === 'moderate' ? '3-4组' : '4-5组',
-      reps: intensity.id === 'low' ? '8-12次' : intensity.id === 'moderate' ? '12-15次' : '15-20次'
+  const toggleCoffeeAddition = (addition: string) => {
+    setCoffeeSelections(prev => ({
+      ...prev,
+      additions: prev.additions.includes(addition)
+        ? prev.additions.filter(item => item !== addition)
+        : [...prev.additions, addition]
     }));
   };
 
-  const coffeeRecipe = generateCoffeeRecipe();
-  const teaRecipe = generateTeaRecipe();
-  const sportPlan = generateSportPlan();
+const setTeaTool = (category: keyof TeaSelections, value: string) => {
+  setTeaSelections(prev => ({
+    ...prev,
+    [category]: prev[category] === value ? "" : value  
+    // 如果点击的是已选中的值，则清空，否则设置新值
+  }));
+};
+  
 
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 bg-clip-text text-transparent mb-4">
-            生活指南助手
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            探索咖啡冲煮的艺术，品味茶饮调制的精髓，掌握科学运动的方法 —— 让每一天都充满仪式感
-          </p>
+  const toggleExerciseSelection = (category: keyof ExerciseSelections, value: string) => {
+    setExerciseSelections(prev => ({
+      ...prev,
+      [category]: prev[category].includes(value)
+        ? prev[category].filter(item => item !== value)
+        : [...prev[category], value]
+    }));
+  };
+
+  const getCoffeeNameAndDescription = (tool: string, bean: string, additions: string[]) => {
+    const toolNames: { [key: string]: { name: string; description: string } } = {
+      '法压壶': {
+        name: '法式咖啡',
+        description: '浓郁醇厚的法式压滤咖啡，口感饱满层次丰富'
+      },
+      '摩卡壶': {
+        name: '摩卡咖啡',
+        description: '意式经典摩卡壶制作，浓缩香醇的传统风味'
+      },
+      '手冲壶+滤杯': {
+        name: '手冲咖啡',
+        description: '精品手冲咖啡，突出豆子原有的风味特色'
+      },
+      '冷萃瓶': {
+        name: '冷萃咖啡',
+        description: '低温长时间萃取，口感顺滑酸度柔和'
+      },
+      '咖啡胶囊机': {
+        name: '胶囊咖啡',
+        description: '便捷快速的胶囊咖啡，稳定一致的口感体验'
+      },
+      '意式浓缩机': {
+        name: '意式浓缩',
+        description: '经典意式浓缩咖啡，浓郁香醇的咖啡精华'
+      },
+      '冰滴壶': {
+        name: '冰滴咖啡',
+        description: '冰水慢滴萃取，清香甘甜的夏日特饮'
+      },
+      '爱乐压': {
+        name: '爱乐压咖啡',
+        description: '创新压滤萃取，干净明亮的咖啡风味'
+      }
+    };
+
+    const beanDescriptions: { [key: string]: string } = {
+      '浅烘焙豆': '风味清爽，果酸明显',
+      '中烘焙豆': '酸苦平衡，适合多种冲煮',
+      '深烘焙豆': '口感厚重偏苦，适合浓缩',
+      '单品豆': '具体产地风味各异',
+      '商业拼配豆': '适口性强，日常首选'
+    };
+
+    const toolInfo = toolNames[tool] || { name: '咖啡', description: '美味的咖啡饮品' };
+    const beanDesc = beanDescriptions[bean] || '';
+    
+    // 如果有添加物，调整描述
+    if (additions.length > 0 && !additions.includes('不加')) {
+      const additionDesc = additions.includes('牛奶/奶泡') ? '，搭配丝滑奶泡' :
+                          additions.includes('椰奶/燕麦奶') ? '，使用植物奶制作健康版本' :
+                          additions.includes('蜂蜜/糖浆') ? '，添加天然甜味' :
+                          additions.includes('冰淇淋') ? '，制作成Affogato风格' :
+                          additions.includes('可可粉/肉桂粉') ? '，撒上香料粉增加风味' : '';
+      
+      return {
+        name: toolInfo.name,
+        description: `${toolInfo.description}（${beanDesc}）${additionDesc}`
+      };
+    }
+
+    return {
+      name: toolInfo.name,
+      description: `${toolInfo.description}（${beanDesc}）`
+    };
+  };
+
+  const getTeaNameAndDescription = (teaTypes: string[], brewMethods: string[], accessories: string[]) => {
+    const teaNames: { [key: string]: { name: string; description: string } } = {
+      'green': { name: '绿茶', description: '清香淡雅，富含抗氧化物质' },
+      'black': { name: '红茶', description: '醇厚浓郁，温暖身心' },
+      'oolong': { name: '乌龙茶', description: '半发酵茶，香气独特' },
+      'white': { name: '白茶', description: '清淡甘甜，自然纯净' },
+      'puer': { name: '普洱茶', description: '陈香浓郁，越陈越香' },
+      'floral': { name: '花茶', description: '花香怡人，舒缓心情' }
+    };
+
+    const brewNames: { [key: string]: string } = {
+      'clay-pot': '紫砂壶冲泡',
+      'gaiwan': '盖碗冲泡',
+      'glass': '玻璃杯冲泡',
+      'teapot': '茶壶冲泡',
+      'cold-brew': '冷泡制作',
+      'quick': '快速冲泡'
+    };
+
+    const primaryTea = teaTypes.length > 0 ? teaTypes[0] : '';
+    const primaryBrew = brewMethods.length > 0 ? brewMethods[0] : '';
+    
+    const teaInfo = teaNames[primaryTea] || { name: '茶饮', description: '香醇的茶饮' };
+    const brewMethod = brewNames[primaryBrew] || '传统冲泡';
+    
+    // 如果有添加物，调整描述
+    if (accessories.length > 0 && !accessories.includes('none')) {
+      const additionDesc = accessories.includes('honey') ? '，添加蜂蜜增甜' :
+                          accessories.includes('lemon') ? '，加入柠檬片提味' :
+                          accessories.includes('milk') ? '，搭配牛奶制成奶茶' :
+                          accessories.includes('mint') ? '，加入薄荷叶清香' :
+                          accessories.includes('ice') ? '，加冰制成冰茶' : '';
+      
+      return {
+        name: `${teaInfo.name}（${brewMethod}）`,
+        description: `${teaInfo.description}${additionDesc}`
+      };
+    }
+
+    return {
+      name: `${teaInfo.name}（${brewMethod}）`,
+      description: teaInfo.description
+    };
+  };
+
+  const generateCoffeeRecipe = () => {
+    if (!coffeeSelections.bean || !coffeeSelections.tool) {
+      return;
+    }
+
+    // If no additions selected, use "不加"
+    const additionsToCheck = coffeeSelections.additions.length > 0 ? coffeeSelections.additions : ['不加'];
+    
+    // Find matching recipe for the first addition (or "不加")
+    const matchingRecipe = coffeeRecipes.find(recipe => 
+      recipe.bean === coffeeSelections.bean && 
+      recipe.tool === coffeeSelections.tool && 
+      recipe.addition === additionsToCheck[0]
+    );
+
+    if (matchingRecipe) {
+      setGeneratedRecipe(matchingRecipe.result);
+      
+      // Get coffee name and description based on selections
+      const { name, description } = getCoffeeNameAndDescription(
+        coffeeSelections.tool, 
+        coffeeSelections.bean, 
+        coffeeSelections.additions
+      );
+      setCoffeeTitle(name);
+      setCoffeeDescription(description);
+    } else {
+      setGeneratedRecipe('未找到匹配的配方，请尝试其他组合。');
+      setCoffeeTitle('咖啡');
+      setCoffeeDescription('请选择有效的组合');
+    }
+  };
+
+  const generateTeaRecipe = () => {
+    if (!teaSelections.teaTypes || !teaSelections.brewMethods) {
+      return;
+    }
+
+    // Map tea types to recipe format
+    const teaTypeMap: { [key: string]: string } = {
+      'green': '绿茶',
+      'black': '红茶',
+      'oolong': '乌龙茶',
+      'white': '白茶',
+      'puer': '普洱茶',
+      'floral': '花茶'
+    };
+
+    const brewMethodMap: { [key: string]: string } = {
+      'clay-pot': '紫砂壶',
+      'gaiwan': '盖碗',
+      'glass': '玻璃杯',
+      'teapot': '茶壶',
+      'cold-brew': '冷泡',
+      'quick': '快速冲泡'
+    };
+
+    const primaryTea = teaTypeMap[teaSelections.teaTypes] || '绿茶';
+    const primaryBrew = brewMethodMap[teaSelections.brewMethods] || '玻璃杯';
+    
+    // If no accessories selected, use "不加"
+    const accessoriesToCheck = teaSelections.accessories && teaSelections.accessories !== 'none' 
+      ? [teaSelections.accessories] : ['不加'];
+    
+    // Map accessories to recipe format
+    const accessoryMap: { [key: string]: string } = {
+      'honey': '蜂蜜',
+      'lemon': '柠檬',
+      'milk': '牛奶',
+      'mint': '薄荷',
+      'ice': '冰块',
+      'none': '不加'
+    };
+
+    const primaryAccessory = accessoryMap[accessoriesToCheck[0]] || '不加';
+    
+    // Find matching recipe
+    const matchingRecipe = teaRecipes.find(recipe => 
+      recipe.tea === primaryTea && 
+      recipe.tool === primaryBrew && 
+      recipe.addition === primaryAccessory
+    );
+
+    if (matchingRecipe) {
+      setGeneratedTeaRecipe(matchingRecipe.result);
+      
+      // Get tea name and description based on selections
+      const { name, description } = getTeaNameAndDescription(
+        teaSelections.teaTypes ? [teaSelections.teaTypes] : [],
+        teaSelections.brewMethods ? [teaSelections.brewMethods] : [],
+        teaSelections.accessories ? [teaSelections.accessories] : []
+      );
+      setTeaTitle(name);
+      setTeaDescription(description);
+    } else {
+      setGeneratedTeaRecipe('未找到匹配的配方，请尝试其他组合。');
+      setTeaTitle('茶饮');
+      setTeaDescription('请选择有效的组合');
+    }
+  };
+
+  const generateExerciseRoutine = () => {
+    window.open('https://www.bilibili.com/video/BV1GJ411x7h7/', '_blank');
+  };
+
+  const shuffleRecommendations = () => {
+    // Get current displayed IDs
+    const currentIds = displayedRecommendations.map(rec => rec.id);
+    
+    // Filter out currently displayed recommendations
+    const availableRecommendations = coffeeRecommendations.filter(rec => !currentIds.includes(rec.id));
+    
+    // If we have enough different recommendations, use them
+    if (availableRecommendations.length >= 3) {
+      const shuffled = [...availableRecommendations].sort(() => 0.5 - Math.random());
+      setDisplayedRecommendations(shuffled.slice(0, 3));
+    } else {
+      // If not enough different ones, shuffle all and take 3
+      const shuffled = [...coffeeRecommendations].sort(() => 0.5 - Math.random());
+      setDisplayedRecommendations(shuffled.slice(0, 3));
+    }
+    
+    setSelectedRecommendation(null); // Clear selected recommendation
+  };
+
+  const shuffleTeaRecommendations = () => {
+    // Get current displayed IDs
+    const currentIds = displayedTeaRecommendations.map(rec => rec.id);
+    
+    // Filter out currently displayed recommendations
+    const availableRecommendations = teaRecommendations.filter(rec => !currentIds.includes(rec.id));
+    
+    // If we have enough different recommendations, use them
+    if (availableRecommendations.length >= 3) {
+      const shuffled = [...availableRecommendations].sort(() => 0.5 - Math.random());
+      setDisplayedTeaRecommendations(shuffled.slice(0, 3));
+    } else {
+      // If not enough different ones, shuffle all and take 3
+      const shuffled = [...teaRecommendations].sort(() => 0.5 - Math.random());
+      setDisplayedTeaRecommendations(shuffled.slice(0, 3));
+    }
+    
+    setSelectedTeaRecommendation(null); // Clear selected recommendation
+  };
+
+  const shuffleSportRecommendations = () => {
+    // Get current displayed IDs
+    const currentIds = displayedSportRecommendations.map(rec => rec.id);
+    
+    // Filter out currently displayed recommendations
+    const availableRecommendations = sportRecommendations.filter(rec => !currentIds.includes(rec.id));
+    
+    // If we have enough different recommendations, use them
+    if (availableRecommendations.length >= 3) {
+      const shuffled = [...availableRecommendations].sort(() => 0.5 - Math.random());
+      setDisplayedSportRecommendations(shuffled.slice(0, 3));
+    } else {
+      // If not enough different ones, shuffle all and take 3
+      const shuffled = [...sportRecommendations].sort(() => 0.5 - Math.random());
+      setDisplayedSportRecommendations(shuffled.slice(0, 3));
+    }
+    
+    setSelectedSportRecommendation(null); // Clear selected recommendation
+  };
+
+  const selectRecommendation = (recommendation: CoffeeRecommendation) => {
+    setSelectedRecommendation(recommendation);
+  };
+
+  const selectTeaRecommendation = (recommendation: TeaRecommendation) => {
+    setSelectedTeaRecommendation(recommendation);
+  };
+
+  const selectSportRecommendation = (recommendation: SportRecommendation) => {
+    setSelectedSportRecommendation(recommendation);
+  };
+
+  const OptionButton = ({ 
+    option, 
+    isSelected, 
+    onClick,
+    colorScheme = 'amber',
+    disabled = false
+  }: { 
+    option: { emoji: string; text: string; value: string };
+    isSelected: boolean;
+    onClick: () => void;
+    colorScheme?: string;
+    disabled?: boolean;
+  }) => {
+    const colorClasses = {
+      amber: isSelected 
+        ? 'bg-amber-100 text-amber-800 ring-2 ring-amber-300 shadow-sm' 
+        : 'bg-gray-50 text-gray-700 hover:bg-gray-100',
+      green: isSelected 
+        ? 'bg-green-100 text-green-800 ring-2 ring-green-300 shadow-sm' 
+        : 'bg-gray-50 text-gray-700 hover:bg-gray-100',
+      blue: isSelected 
+        ? 'bg-blue-100 text-blue-800 ring-2 ring-blue-300 shadow-sm' 
+        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+    };
+
+    return (
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`
+          inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+          transition-all duration-200 hover:scale-105 hover:shadow-md
+          ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+          ${colorClasses[colorScheme as keyof typeof colorClasses]}
+        `}
+      >
+        <span className="text-base">{option.emoji}</span>
+        <span>{option.text}</span>
+      </button>
+    );
+  };
+
+  // Coffee options - simplified
+  const beanOptions = [
+    { emoji: '🫘', text: '浅烘焙豆', value: '浅烘焙豆' },
+    { emoji: '🫘', text: '中烘焙豆', value: '中烘焙豆' },
+    { emoji: '🫘', text: '深烘焙豆', value: '深烘焙豆' },
+    { emoji: '🫘', text: '单品豆', value: '单品豆' },
+    { emoji: '🫘', text: '商业拼配豆', value: '商业拼配豆' },
+    { emoji: '❓', text: '没有豆子', value: '没有豆子' }
+  ];
+
+  const equipmentOptions = [
+    { emoji: '☕', text: '法压壶', value: '法压壶' },
+    { emoji: '🫖', text: '摩卡壶', value: '摩卡壶' },
+    { emoji: '💦', text: '手冲壶+滤杯', value: '手冲壶+滤杯' },
+    { emoji: '🧊', text: '冷萃瓶', value: '冷萃瓶' },
+    { emoji: '🧃', text: '咖啡胶囊机', value: '咖啡胶囊机' },
+    { emoji: '☕', text: '意式浓缩机', value: '意式浓缩机' },
+    { emoji: '🧊', text: '冰滴壶', value: '冰滴壶' },
+    { emoji: '🧪', text: '爱乐压', value: '爱乐压' },
+    { emoji: '🚫', text: '什么都没有', value: '什么都没有' }
+  ];
+
+  const additiveOptions = [
+    { emoji: '🥛', text: '牛奶/奶泡', value: '牛奶/奶泡' },
+    { emoji: '🥥', text: '椰奶/燕麦奶', value: '椰奶/燕麦奶' },
+    { emoji: '🍯', text: '蜂蜜/糖浆', value: '蜂蜜/糖浆' },
+    { emoji: '🍦', text: '冰淇淋', value: '冰淇淋' },
+    { emoji: '🍫', text: '可可粉/肉桂粉', value: '可可粉/肉桂粉' },
+    { emoji: '❌', text: '不加，我喜欢纯的', value: '不加' }
+  ];
+
+  // Tea options
+  const teaTypeOptions = [
+    { emoji: '🍃', text: '绿茶', value: 'green' },
+    { emoji: '🟤', text: '红茶', value: 'black' },
+    { emoji: '🌸', text: '乌龙茶', value: 'oolong' },
+    { emoji: '⚪', text: '白茶', value: 'white' },
+    { emoji: '🟫', text: '普洱茶', value: 'puer' },
+    { emoji: '🌺', text: '花茶', value: 'floral' }
+  ];
+
+  const brewMethodOptions = [
+    { emoji: '🫖', text: '紫砂壶', value: 'clay-pot' },
+    { emoji: '🍵', text: '盖碗', value: 'gaiwan' },
+    { emoji: '🥤', text: '玻璃杯', value: 'glass' },
+    { emoji: '🫖', text: '茶壶', value: 'teapot' },
+    { emoji: '🧊', text: '冷泡', value: 'cold-brew' },
+    { emoji: '⚡', text: '快速冲泡', value: 'quick' }
+  ];
+
+  const temperatureOptions = [
+    { emoji: '🔥', text: '沸水 (100°C)', value: 'boiling' },
+    { emoji: '🌡️', text: '热水 (85-95°C)', value: 'hot' },
+    { emoji: '💧', text: '温水 (70-80°C)', value: 'warm' },
+    { emoji: '🧊', text: '冷水', value: 'cold' }
+  ];
+
+  const teaAccessoryOptions = [
+    { emoji: '🍯', text: '蜂蜜', value: 'honey' },
+    { emoji: '🍋', text: '柠檬', value: 'lemon' },
+    { emoji: '🥛', text: '牛奶', value: 'milk' },
+    { emoji: '🌿', text: '薄荷', value: 'mint' },
+    { emoji: '🧊', text: '冰块', value: 'ice' },
+    { emoji: '❌', text: '纯茶', value: 'none' }
+  ];
+
+  // Exercise options
+  const bodyPartOptions = [
+    { emoji: '💪', text: '手臂', value: 'arms' },
+    { emoji: '🦵', text: '腿部', value: 'legs' },
+    { emoji: '🫀', text: '胸部', value: 'chest' },
+    { emoji: '🔙', text: '背部', value: 'back' },
+    { emoji: '🤸', text: '核心', value: 'core' },
+    { emoji: '🏃', text: '全身', value: 'full-body' }
+  ];
+
+  const exerciseEquipmentOptions = [
+    { emoji: '🏋️', text: '哑铃', value: 'dumbbells' },
+    { emoji: '🎯', text: '瑜伽垫', value: 'yoga-mat' },
+    { emoji: '🏃', text: '跑步机', value: 'treadmill' },
+    { emoji: '🚴', text: '健身车', value: 'bike' },
+    { emoji: '🤸', text: '弹力带', value: 'resistance-band' },
+    { emoji: '🚫', text: '徒手训练', value: 'bodyweight' }
+  ];
+
+  const intensityOptions = [
+    { emoji: '😌', text: '轻松', value: 'easy' },
+    { emoji: '😊', text: '适中', value: 'moderate' },
+    { emoji: '😤', text: '高强度', value: 'intense' },
+    { emoji: '🔥', text: '极限挑战', value: 'extreme' }
+  ];
+
+  const durationOptions = [
+    { emoji: '⏱️', text: '15分钟', value: '15min' },
+    { emoji: '⏰', text: '30分钟', value: '30min' },
+    { emoji: '🕐', text: '45分钟', value: '45min' },
+    { emoji: '⏳', text: '1小时+', value: '60min+' }
+  ];
+
+  const renderCoffeeModule = () => (
+    <Card className="p-8 bg-white/80 backdrop-blur-sm shadow-xl border-0">
+      {/* Step 1: Coffee Beans */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">1️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择你有的咖啡豆</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">单选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「咖啡豆类型」</p>
+        <div className="flex flex-wrap gap-3">
+          {beanOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={coffeeSelections.bean === option.value}
+              onClick={() => setCoffeeBean(option.value)}
+              colorScheme="amber"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 2: Equipment */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">2️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择手边的器具</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">单选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「冲煮工具」</p>
+        <div className="flex flex-wrap gap-3">
+          {equipmentOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={coffeeSelections.tool === option.value}
+              onClick={() => setCoffeeTool(option.value)}
+              colorScheme="amber"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 3: Additives */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">3️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">是否搭配牛奶或其它？</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">可多选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「风味增强」</p>
+        <div className="flex flex-wrap gap-3">
+          {additiveOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={coffeeSelections.additions.includes(option.value)}
+              onClick={() => toggleCoffeeAddition(option.value)}
+              colorScheme="amber"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Generated Recipe Display */}
+      {generatedRecipe && (
+        <div className="mb-8 p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl border border-yellow-200">
+          <div className="text-center mb-4">
+            <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+              🎯 你的专属咖啡配方
+            </h3>
+            <p className="text-sm text-gray-600 mt-2">根据你的偏好生成的个性化配方</p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="mb-4">
+              <h4 className="text-lg font-semibold text-amber-700 mb-2">{coffeeTitle}</h4>
+              <p className="text-gray-600 text-sm mb-3">{coffeeDescription}</p>
+            </div>
+            
+            <div className="mb-4">
+              <h5 className="font-semibold text-gray-800 mb-2">🥄 制作方法</h5>
+              <p className="text-gray-700 text-sm leading-relaxed">{generatedRecipe}</p>
+            </div>
+            
+            <div className="flex justify-center">
+              <Button
+                onClick={() => window.open('https://www.bilibili.com/video/BV1xx411c7Sq/', '_blank')}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                ▶ 观看详细教程视频 🔗
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Recommendations Section */}
+      <div className="mt-16 p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl border border-yellow-200">
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            🎲 选择困难？抽卡直接做！
+          </h3>
+          <p className="text-sm text-gray-600 mt-2">发现更多咖啡制作方法</p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-4 text-sm mb-6">
+          {displayedRecommendations.map((recommendation) => (
+            <div 
+              key={recommendation.id}
+              onClick={() => selectRecommendation(recommendation)}
+              className="text-center p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-105"
+            >
+              <div className="text-2xl mb-2">{recommendation.emoji}</div>
+              <div className="font-semibold text-gray-800 mb-2">{recommendation.name}</div>
+              <div className="text-gray-600 mb-2">{recommendation.subtitle}</div>
+              <div className="text-xs text-amber-600">{recommendation.difficulty}</div>
+              {recommendation.warning && (
+                <div className="text-xs text-red-600 mt-1 flex items-center justify-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  安全提醒
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
-        <Tabs defaultValue="coffee" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="coffee" className="text-lg py-3">
-              ☕ 咖啡冲煮
-            </TabsTrigger>
-            <TabsTrigger value="tea" className="text-lg py-3">
-              🫖 茶饮调制
-            </TabsTrigger>
-            <TabsTrigger value="sport" className="text-lg py-3">
-              🏋️‍♂️ 运动健身
-            </TabsTrigger>
-          </TabsList>
+        <div className="text-center">
+          <Button
+            onClick={shuffleRecommendations}
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            换一换
+          </Button>
+        </div>
 
-          {/* 咖啡模块 */}
-          <TabsContent value="coffee">
-            <div className="space-y-8">
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="text-4xl">☕</div>
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                    咖啡冲煮指南
-                  </h2>
+        {/* Detailed Recipe Display */}
+        {selectedRecommendation && (
+          <div className="mt-8 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">{selectedRecommendation.emoji}</span>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-800">{selectedRecommendation.name}</h4>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span>难度: {selectedRecommendation.difficulty}</span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      制作时间: 10-15分钟
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      1人份
+                    </span>
+                  </div>
                 </div>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  从意式浓缩到手冲单品，掌握专业咖啡师技巧，在家享受咖啡馆级别的香醇体验
-                </p>
               </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">☕</span>
-                    自定义咖啡配方
-                  </CardTitle>
-                  <CardDescription>
-                    选择咖啡类型、冲泡方法和添加物，生成专属配方
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* 咖啡类型选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">1️⃣ 选择咖啡类型</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {coffeeTypes.map((coffee) => (
-                        <Button
-                          key={coffee.id}
-                          variant={selectedCoffeeType === coffee.id ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => setSelectedCoffeeType(coffee.id)}
-                        >
-                          <span className="text-2xl">{coffee.emoji}</span>
-                          <span className="text-sm">{coffee.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{coffee.description}</span>
-                        </Button>
-                      ))}
-                    </div>
+              {selectedRecommendation.warning && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-700 font-semibold mb-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    {selectedRecommendation.warning}
                   </div>
-
-                  {/* 冲泡方法选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">2️⃣ 选择冲泡方法</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {brewMethods.map((method) => (
-                        <Button
-                          key={method.id}
-                          variant={selectedBrewMethod === method.id ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => setSelectedBrewMethod(method.id)}
-                        >
-                          <span className="text-2xl">{method.emoji}</span>
-                          <span className="text-sm text-center">{method.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{method.description}</span>
-                        </Button>
+                  {selectedRecommendation.safety && (
+                    <ul className="text-sm text-red-600 space-y-1">
+                      {selectedRecommendation.safety.map((item, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-red-500 mt-1">•</span>
+                          {item}
+                        </li>
                       ))}
-                    </div>
-                  </div>
-
-                  {/* 添加物选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">3️⃣ 选择添加物（可多选）</h4>
-                    <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                      {coffeeAddons.map((addon) => (
-                        <Button
-                          key={addon.id}
-                          variant={selectedCoffeeAddons.includes(addon.id) ? "default" : "outline"}
-                          className="h-auto p-3 flex flex-col items-center gap-1"
-                          onClick={() => {
-                            setSelectedCoffeeAddons(prev => 
-                              prev.includes(addon.id) 
-                                ? prev.filter(id => id !== addon.id)
-                                : [...prev, addon.id]
-                            );
-                          }}
-                        >
-                          <span className="text-xl">{addon.emoji}</span>
-                          <span className="text-xs">{addon.name}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 生成的配方 */}
-                  {coffeeRecipe && (
-                    <div className="mt-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
-                      <h3 className="text-xl font-bold text-amber-800 mb-4 flex items-center gap-2">
-                        <span className="text-2xl">☕</span>
-                        你的专属咖啡配方
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{coffeeRecipe.coffeeType.emoji}</span>
-                            <div>
-                              <h4 className="font-semibold text-amber-700">{coffeeRecipe.coffeeType.name}</h4>
-                              <p className="text-sm text-amber-600">{coffeeRecipe.coffeeType.description}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{coffeeRecipe.brewMethod.emoji}</span>
-                            <div>
-                              <h4 className="font-semibold text-amber-700">{coffeeRecipe.brewMethod.name}</h4>
-                              <p className="text-sm text-amber-600">{coffeeRecipe.brewMethod.description}</p>
-                            </div>
-                          </div>
-
-                          {coffeeRecipe.addons.length > 0 && (
-                            <div>
-                              <h4 className="font-semibold text-amber-700 mb-2">添加物</h4>
-                              <div className="flex flex-wrap gap-2">
-                                {coffeeRecipe.addons.map((addon) => (
-                                  <Badge key={addon.id} variant="secondary" className="bg-amber-100 text-amber-700">
-                                    {addon.emoji} {addon.name}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="p-4 bg-white rounded-lg border border-amber-200">
-                            <h4 className="font-semibold text-amber-700 mb-3 flex items-center gap-2">
-                              <Thermometer className="w-4 h-4" />
-                              冲泡参数
-                            </h4>
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">粉水比例</span>
-                                <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.ratio}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">水温</span>
-                                <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.temperature}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">时间</span>
-                                <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.time}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">研磨度</span>
-                                <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.grind}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="p-4 bg-white rounded-lg border border-amber-200">
-                            <h4 className="font-semibold text-amber-700 mb-2">制作要点</h4>
-                            <ul className="text-sm text-gray-600 space-y-1">
-                              <li>• 使用新鲜烘焙的咖啡豆</li>
-                              <li>• 控制好水温和萃取时间</li>
-                              <li>• 根据个人口味调整浓度</li>
-                              {coffeeRecipe.addons.length > 0 && (
-                                <li>• 添加物在咖啡制作完成后加入</li>
-                              )}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    </ul>
                   )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* 茶饮模块 */}
-          <TabsContent value="tea">
-            <div className="space-y-8">
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="text-4xl">🫖</div>
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                    茶饮调制指南
-                  </h2>
                 </div>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  从经典奶茶到创意特饮，掌握专业调茶技巧，在家享受茶室级别的美味体验
-                </p>
-              </div>
+              )}
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">🫖</span>
-                    自定义茶饮配方
-                  </CardTitle>
-                  <CardDescription>
-                    选择茶叶类型、冲泡方法和配件，生成专属配方
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* 茶叶类型选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">1️⃣ 选择茶叶类型</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {teaTypes.map((tea) => (
-                        <Button
-                          key={tea.id}
-                          variant={selectedTeaType === tea.id ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => setSelectedTeaType(tea.id)}
-                        >
-                          <span className="text-2xl">{tea.emoji}</span>
-                          <span className="text-sm">{tea.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{tea.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 冲泡方法选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">2️⃣ 选择冲泡方法</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {teaBrewMethods.map((method) => (
-                        <Button
-                          key={method.id}
-                          variant={selectedTeaBrewMethod === method.id ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => setSelectedTeaBrewMethod(method.id)}
-                        >
-                          <span className="text-2xl">{method.emoji}</span>
-                          <span className="text-sm text-center">{method.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{method.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 配件选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">3️⃣ 选择配件（可多选）</h4>
-                    <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                      {teaAccessories.map((accessory) => (
-                        <Button
-                          key={accessory.id}
-                          variant={selectedTeaAccessories.includes(accessory.id) ? "default" : "outline"}
-                          className="h-auto p-3 flex flex-col items-center gap-1"
-                          onClick={() => {
-                            setSelectedTeaAccessories(prev => 
-                              prev.includes(accessory.id) 
-                                ? prev.filter(id => id !== accessory.id)
-                                : [...prev, accessory.id]
-                            );
-                          }}
-                        >
-                          <span className="text-xl">{accessory.emoji}</span>
-                          <span className="text-xs">{accessory.name}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 生成的配方 */}
-                  {teaRecipe && (
-                    <div className="mt-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
-                      <h3 className="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                        <span className="text-2xl">🫖</span>
-                        你的专属茶饮配方
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{teaRecipe.teaType.emoji}</span>
-                            <div>
-                              <h4 className="font-semibold text-emerald-700">{teaRecipe.teaType.name}</h4>
-                              <p className="text-sm text-emerald-600">{teaRecipe.teaType.description}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{teaRecipe.brewMethod.emoji}</span>
-                            <div>
-                              <h4 className="font-semibold text-emerald-700">{teaRecipe.brewMethod.name}</h4>
-                              <p className="text-sm text-emerald-600">{teaRecipe.brewMethod.description}</p>
-                            </div>
-                          </div>
-
-                          {teaRecipe.accessories.length > 0 && (
-                            <div>
-                              <h4 className="font-semibold text-emerald-700 mb-2">添加配件</h4>
-                              <div className="flex flex-wrap gap-2">
-                                {teaRecipe.accessories.map((accessory) => (
-                                  <Badge key={accessory.id} variant="secondary" className="bg-emerald-100 text-emerald-700">
-                                    {accessory.emoji} {accessory.name}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="p-4 bg-white rounded-lg border border-emerald-200">
-                            <h4 className="font-semibold text-emerald-700 mb-3 flex items-center gap-2">
-                              <Thermometer className="w-4 h-4" />
-                              冲泡参数
-                            </h4>
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">水温</span>
-                                <span className="text-sm font-medium text-emerald-600">{teaRecipe.temperature}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">时间</span>
-                                <span className="text-sm font-medium text-emerald-600">{teaRecipe.time}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">茶水比例</span>
-                                <span className="text-sm font-medium text-emerald-600">1:50</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="p-4 bg-white rounded-lg border border-emerald-200">
-                            <h4 className="font-semibold text-emerald-700 mb-2">制作要点</h4>
-                            <ul className="text-sm text-gray-600 space-y-1">
-                              <li>• 先温杯，再投茶</li>
-                              <li>• 控制好水温和时间</li>
-                              <li>• 根据个人口味调整浓度</li>
-                              {teaRecipe.accessories.length > 0 && (
-                                <li>• 配件在茶汤温度降至60°C后添加</li>
-                              )}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* 运动模块 */}
-          <TabsContent value="sport">
-            <div className="space-y-8">
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="text-4xl">🏋️‍♂️</div>
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    运动健身指南
-                  </h2>
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    🛠️ 所需工具
+                  </h5>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {selectedRecommendation.tools.map((tool, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
+                        {tool}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  从基础热身到专业训练，掌握科学运动方法，在家享受健身房级别的锻炼效果
-                </p>
+
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    🥄 材料清单
+                  </h5>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    {selectedRecommendation.ingredients.map((ingredient, index) => (
+                      <li key={index} className="flex justify-between items-start">
+                        <span className="font-medium">{ingredient.name}</span>
+                        <div className="text-right">
+                          <div className="font-semibold text-amber-600">{ingredient.amount}</div>
+                          <div className="text-xs text-gray-500">{ingredient.note}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">💪</span>
-                    自定义训练计划
-                  </CardTitle>
-                  <CardDescription>
-                    选择锻炼部位、器材、强度和时长，生成专属训练方案
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* 锻炼部位选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">1️⃣ 选择锻炼部位（可多选）</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {bodyParts.map((part) => (
-                        <Button
-                          key={part.id}
-                          variant={selectedBodyParts.includes(part.id) ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => {
-                            setSelectedBodyParts(prev => 
-                              prev.includes(part.id) 
-                                ? prev.filter(id => id !== part.id)
-                                : [...prev, part.id]
-                            );
-                          }}
-                        >
-                          <span className="text-2xl">{part.emoji}</span>
-                          <span className="text-sm">{part.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{part.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 运动器材选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">2️⃣ 选择运动器材（可多选）</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {equipment.map((eq) => (
-                        <Button
-                          key={eq.id}
-                          variant={selectedEquipment.includes(eq.id) ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => {
-                            setSelectedEquipment(prev => 
-                              prev.includes(eq.id) 
-                                ? prev.filter(id => id !== eq.id)
-                                : [...prev, eq.id]
-                            );
-                          }}
-                        >
-                          <span className="text-2xl">{eq.emoji}</span>
-                          <span className="text-sm">{eq.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{eq.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 运动强度选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">3️⃣ 选择运动强度</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {intensityLevels.map((level) => (
-                        <Button
-                          key={level.id}
-                          variant={selectedIntensity === level.id ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => setSelectedIntensity(level.id)}
-                        >
-                          <span className="text-2xl">{level.emoji}</span>
-                          <span className="text-sm">{level.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{level.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 运动时长选择 */}
-                  <div>
-                    <h4 className="font-semibold mb-3">4️⃣ 选择运动时长</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {durations.map((duration) => (
-                        <Button
-                          key={duration.id}
-                          variant={selectedDuration === duration.id ? "default" : "outline"}
-                          className="h-auto p-4 flex flex-col items-center gap-2"
-                          onClick={() => setSelectedDuration(duration.id)}
-                        >
-                          <span className="text-2xl">{duration.emoji}</span>
-                          <span className="text-sm">{duration.name}</span>
-                          <span className="text-xs text-muted-foreground text-center">{duration.description}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 生成的训练计划 */}
-                  {sportPlan && (
-                    <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-                      <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center gap-2">
-                        <span className="text-2xl">💪</span>
-                        你的专属运动配方
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="space-y-4">
-                          <div>
-                            <h4 className="font-semibold text-blue-700 mb-2">训练部位</h4>
-                            <div className="flex flex-wrap gap-2">
-                              {sportPlan.bodyParts.map((part) => (
-                                <Badge key={part.id} variant="secondary" className="bg-blue-100 text-blue-700">
-                                  {part.emoji} {part.name}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <h4 className="font-semibold text-blue-700 mb-2">使用器材</h4>
-                            <div className="flex flex-wrap gap-2">
-                              {sportPlan.equipment.map((eq) => (
-                                <Badge key={eq.id} variant="secondary" className="bg-purple-100 text-purple-700">
-                                  {eq.emoji} {eq.name}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-4 bg-white rounded-lg border border-blue-200">
-                          <h4 className="font-semibold text-blue-700 mb-3 flex items-center gap-2">
-                            <Timer className="w-4 h-4" />
-                            训练参数
-                          </h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-600">强度等级</span>
-                              <span className="text-sm font-medium text-blue-600">{sportPlan.intensity.name}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-600">训练时长</span>
-                              <span className="text-sm font-medium text-blue-600">{sportPlan.duration.name}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-600">目标部位</span>
-                              <span className="text-sm font-medium text-blue-600">{sportPlan.bodyParts.length}个</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 具体训练动作 */}
-                      <div className="space-y-4">
-                        <h4 className="font-semibold text-blue-700 mb-3">训练动作安排</h4>
-                        {sportPlan.exercises.map((exercise, index) => (
-                          <div key={index} className="p-4 bg-white rounded-lg border border-blue-200">
-                            <div className="flex items-center justify-between mb-3">
-                              <h5 className="font-semibold text-blue-700 flex items-center gap-2">
-                                <span className="text-xl">{exercise.emoji}</span>
-                                {exercise.bodyPart} - {exercise.time}
-                              </h5>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-blue-600 border-blue-300 hover:bg-blue-50"
-                                onClick={() => window.open(exercise.videoUrl, '_blank')}
-                              >
-                                <Play className="w-4 h-4 mr-1" />
-                                观看教程
-                              </Button>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                              {exercise.exercises.map((ex, exIndex) => (
-                                <div key={exIndex} className="p-3 bg-gray-50 rounded border">
-                                  <h6 className="font-medium text-sm text-gray-800">{ex.name}</h6>
-                                  <p className="text-xs text-gray-600 mt-1">{ex.sets} × {ex.reps}</p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
-                        <h4 className="font-semibold text-blue-700 mb-2">训练要点</h4>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• 训练前进行5-10分钟热身</li>
-                          <li>• 动作标准比重量更重要</li>
-                          <li>• 组间休息30-90秒</li>
-                          <li>• 训练后进行拉伸放松</li>
-                          <li>• 根据身体状况调整强度</li>
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
             </div>
-          </TabsContent>
-        </Tabs>
+
+            <div>
+              <h5 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                📋 制作步骤
+              </h5>
+              <div className="space-y-4">
+                {selectedRecommendation.steps.map((step, index) => (
+                  <div key={index} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                      {step.step}
+                    </div>
+                    <div className="flex-1">
+                      <h6 className="font-semibold text-gray-800 mb-2">{step.action}</h6>
+                      <p className="text-sm text-gray-700 mb-2">{step.detail}</p>
+                      
+                      {step.warning && (
+                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200 mb-2">
+                          ⚠️ {step.warning}
+                        </div>
+                      )}
+                      
+                      {step.visual_clue && (
+                        <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200 mb-2">
+                          👁️ 视觉提示: {step.visual_clue}
+                        </div>
+                      )}
+                      
+                      {step.success_sign && (
+                        <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200 mb-2">
+                          ✅ 成功标志: {step.success_sign}
+                        </div>
+                      )}
+                      
+                      {step.abnormal && (
+                        <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border border-orange-200 mb-2">
+                          🔧 异常处理: {step.abnormal}
+                        </div>
+                      )}
+                      
+                      {step.sound_clue && (
+                        <div className="text-xs text-purple-600 bg-purple-50 p-2 rounded border border-purple-200 mb-2">
+                          🔊 声音提示: {step.sound_clue}
+                        </div>
+                      )}
+                      
+                      {step.pro_tip && (
+                        <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+                          💡 专业技巧: {step.pro_tip}
+                        </div>
+                      )}
+                      
+                      {step.time_control && (
+                        <div className="text-xs text-indigo-600 bg-indigo-50 p-2 rounded border border-indigo-200">
+                          ⏱️ 时间控制: {step.time_control}
+                        </div>
+                      )}
+                      
+                      {step.temp_target && (
+                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200">
+                          🌡️ 温度目标: {step.temp_target}
+                        </div>
+                      )}
+                      
+                      {step.drink_tip && (
+                        <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200">
+                          🥤 饮用建议: {step.drink_tip}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </main>
+    </Card>
+  );
+
+  const renderTeaModule = () => (
+    <Card className="p-8 bg-white/80 backdrop-blur-sm shadow-xl border-0">
+      {/* Step 1: Tea Type */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">1️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择茶叶类型</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">单选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「茶叶种类」</p>
+        <div className="flex flex-wrap gap-3">
+          {teaTypeOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={teaSelections.teaTypes === option.value}
+            
+               onClick={() => setTeaTool('teaTypes', option.value)}
+              colorScheme="green"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 2: Brewing Method */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">2️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择冲泡方式</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">单选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「冲泡器具」</p>
+        <div className="flex flex-wrap gap-3">
+          {brewMethodOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={teaSelections.brewMethods === option.value }
+              onClick={() => setTeaTool('brewMethods', option.value)}
+              colorScheme="green"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 3: Water Temperature */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">3️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择水温</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">单选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「冲泡温度」</p>
+        <div className="flex flex-wrap gap-3">
+          {temperatureOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={teaSelections.temperature=== option.value}
+              onClick={() => setTeaTool('temperature', option.value)}
+              colorScheme="green"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 4: Accessories */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">4️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">添加配料</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">单选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「茶饮搭配」</p>
+        <div className="flex flex-wrap gap-3">
+          {teaAccessoryOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={teaSelections.accessories=== option.value}
+              
+               onClick={() => setTeaTool('accessories', option.value)}
+              colorScheme="green"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Generated Tea Recipe Display */}
+      {generatedTeaRecipe && (
+        <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+          <div className="text-center mb-4">
+            <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+              🎯 你的专属茶饮配方
+            </h3>
+            <p className="text-sm text-gray-600 mt-2">根据你的偏好生成的个性化配方</p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="mb-4">
+              <h4 className="text-lg font-semibold text-green-700 mb-2">{teaTitle}</h4>
+              <p className="text-gray-600 text-sm mb-3">{teaDescription}</p>
+            </div>
+            
+            <div className="mb-4">
+              <h5 className="font-semibold text-gray-800 mb-2">🫖 制作方法</h5>
+              <p className="text-gray-700 text-sm leading-relaxed">{generatedTeaRecipe}</p>
+            </div>
+            
+            <div className="flex justify-center">
+              <Button
+                onClick={() => window.open('https://www.bilibili.com/video/BV1yV411d7Qp/', '_blank')}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                ▶ 观看详细教程视频 🔗
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Tea Recommendations Section */}
+      <div className="mt-16 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            🎲 选择困难？抽卡直接做！
+          </h3>
+          <p className="text-sm text-gray-600 mt-2">发现更多茶饮制作方法</p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-4 text-sm mb-6">
+          {displayedTeaRecommendations.map((recommendation) => (
+            <div 
+              key={recommendation.id}
+              onClick={() => selectTeaRecommendation(recommendation)}
+              className="text-center p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-105"
+            >
+              <div className="text-2xl mb-2">{recommendation.emoji}</div>
+              <div className="font-semibold text-gray-800 mb-2">{recommendation.name}</div>
+              <div className="text-gray-600 mb-2">{recommendation.subtitle}</div>
+              <div className="text-xs text-green-600">{recommendation.difficulty}</div>
+              {recommendation.warning && (
+                <div className="text-xs text-red-600 mt-1 flex items-center justify-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  安全提醒
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Button
+            onClick={shuffleTeaRecommendations}
+            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            换一换
+          </Button>
+        </div>
+
+        {/* Detailed Tea Recipe Display */}
+        {selectedTeaRecommendation && (
+          <div className="mt-8 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">{selectedTeaRecommendation.emoji}</span>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-800">{selectedTeaRecommendation.name}</h4>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span>难度: {selectedTeaRecommendation.difficulty}</span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      制作时间: 10-15分钟
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      1人份
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {selectedTeaRecommendation.warning && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-700 font-semibold mb-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    {selectedTeaRecommendation.warning}
+                  </div>
+                  {selectedTeaRecommendation.safety && (
+                    <ul className="text-sm text-red-600 space-y-1">
+                      {selectedTeaRecommendation.safety.map((item, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-red-500 mt-1">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    🛠️ 所需工具
+                  </h5>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {selectedTeaRecommendation.tools.map((tool, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                        {tool}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    🥄 材料清单
+                  </h5>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    {selectedTeaRecommendation.ingredients.map((ingredient, index) => (
+                      <li key={index} className="flex justify-between items-start">
+                        <span className="font-medium">{ingredient.name}</span>
+                        <div className="text-right">
+                          <div className="font-semibold text-green-600">{ingredient.amount}</div>
+                          <div className="text-xs text-gray-500">{ingredient.note}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h5 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                📋 制作步骤
+              </h5>
+              <div className="space-y-4">
+                {selectedTeaRecommendation.steps.map((step, index) => (
+                  <div key={index} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                      {step.step}
+                    </div>
+                    <div className="flex-1">
+                      <h6 className="font-semibold text-gray-800 mb-2">{step.action}</h6>
+                      <p className="text-sm text-gray-700 mb-2">{step.detail}</p>
+                      
+                      {step.warning && (
+                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200 mb-2">
+                          ⚠️ {step.warning}
+                        </div>
+                      )}
+                      
+                      {step.visual_clue && (
+                        <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200 mb-2">
+                          👁️ 视觉提示: {step.visual_clue}
+                        </div>
+                      )}
+                      
+                      {step.success_sign && (
+                        <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200 mb-2">
+                          ✅ 成功标志: {step.success_sign}
+                        </div>
+                      )}
+                      
+                      {step.pro_tip && (
+                        <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200">
+                          💡 专业技巧: {step.pro_tip}
+                        </div>
+                      )}
+                      
+                      {step.time_control && (
+                        <div className="text-xs text-indigo-600 bg-indigo-50 p-2 rounded border border-indigo-200">
+                          ⏱️ 时间控制: {step.time_control}
+                        </div>
+                      )}
+                      
+                      {step.purpose && (
+                        <div className="text-xs text-purple-600 bg-purple-50 p-2 rounded border border-purple-200">
+                          🎯 目的: {step.purpose}
+                        </div>
+                      )}
+                      
+                      {step.technique && (
+                        <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border border-orange-200">
+                          🔧 技巧: {step.technique}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bonus Section */}
+      <div className="mt-16 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+        <div className="text-center mb-4">
+          <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            🌿 茶文化小贴士
+          </h3>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
+          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold text-gray-800 mb-2">绿茶最佳时间</div>
+            <div className="text-gray-600">上午10点，下午3点</div>
+          </div>
+          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold text-gray-800 mb-2">红茶搭配</div>
+            <div className="text-gray-600">配点心，加牛奶</div>
+          </div>
+          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold text-gray-800 mb-2">普洱养生</div>
+            <div className="text-gray-600">饭后一小时饮用</div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+
+  const renderExerciseModule = () => (
+    <Card className="p-8 bg-white/80 backdrop-blur-sm shadow-xl border-0">
+      {/* Step 1: Body Parts */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">1️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择锻炼部位</h2>
+          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">可多选</span>
+        </div>
+        <p className="text-gray-600 mb-4">「目标肌群」</p>
+        <div className="flex flex-wrap gap-3">
+          {bodyPartOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={exerciseSelections.bodyParts.includes(option.value)}
+              onClick={() => toggleExerciseSelection('bodyParts', option.value)}
+              colorScheme="blue"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 2: Equipment */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">2️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择运动器材</h2>
+        </div>
+        <p className="text-gray-600 mb-4">「可用设备」</p>
+        <div className="flex flex-wrap gap-3">
+          {exerciseEquipmentOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={exerciseSelections.equipment.includes(option.value)}
+              onClick={() => toggleExerciseSelection('equipment', option.value)}
+              colorScheme="blue"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 3: Intensity */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">3️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择运动强度</h2>
+        </div>
+        <p className="text-gray-600 mb-4">「训练强度」</p>
+        <div className="flex flex-wrap gap-3">
+          {intensityOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={exerciseSelections.intensity.includes(option.value)}
+              onClick={() => toggleExerciseSelection('intensity', option.value)}
+              colorScheme="blue"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Step 4: Duration */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl">4️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">选择运动时长</h2>
+        </div>
+        <p className="text-gray-600 mb-4">「训练时间」</p>
+        <div className="flex flex-wrap gap-3">
+          {durationOptions.map((option) => (
+            <OptionButton
+              key={option.value}
+              option={option}
+              isSelected={exerciseSelections.duration.includes(option.value)}
+              onClick={() => toggleExerciseSelection('duration', option.value)}
+              colorScheme="blue"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Enhanced Sport Recommendations Section */}
+      <div className="mt-16 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            🎲 选择困难？抽卡直接练！
+          </h3>
+          <p className="text-sm text-gray-600 mt-2">发现更多运动训练方法</p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-4 text-sm mb-6">
+          {displayedSportRecommendations.map((recommendation) => (
+            <div 
+              key={recommendation.id}
+              onClick={() => selectSportRecommendation(recommendation)}
+              className="text-center p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-105"
+            >
+              <div className="text-2xl mb-2">{recommendation.emoji}</div>
+              <div className="font-semibold text-gray-800 mb-2">{recommendation.name}</div>
+              <div className="text-gray-600 mb-2">{recommendation.subtitle}</div>
+              <div className="text-xs text-blue-600">{recommendation.difficulty}</div>
+              {recommendation.warning && (
+                <div className="text-xs text-red-600 mt-1 flex items-center justify-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  安全提醒
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Button
+            onClick={shuffleSportRecommendations}
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            换一换
+          </Button>
+        </div>
+
+        {/* Detailed Sport Recipe Display */}
+        {selectedSportRecommendation && (
+          <div className="mt-8 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">{selectedSportRecommendation.emoji}</span>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-800">{selectedSportRecommendation.name}</h4>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span>难度: {selectedSportRecommendation.difficulty}</span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      训练时间: 5-20分钟
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      1人份
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {selectedSportRecommendation.warning && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-700 font-semibold mb-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    {selectedSportRecommendation.warning}
+                  </div>
+                  {selectedSportRecommendation.safety && (
+                    <ul className="text-sm text-red-600 space-y-1">
+                      {selectedSportRecommendation.safety.map((item, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-red-500 mt-1">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    🛠️ 所需器材
+                  </h5>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {selectedSportRecommendation.tools.map((tool, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                        {tool}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    📋 准备清单
+                  </h5>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    {selectedSportRecommendation.ingredients.map((ingredient, index) => (
+                      <li key={index} className="flex justify-between items-start">
+                        <span className="font-medium">{ingredient.name}</span>
+                        <div className="text-right">
+                          <div className="font-semibold text-blue-600">{ingredient.amount}</div>
+                          <div className="text-xs text-gray-500">{ingredient.note}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h5 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                📋 训练步骤
+              </h5>
+              <div className="space-y-4">
+                {selectedSportRecommendation.steps.map((step, index) => (
+                  <div key={index} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                      {step.step}
+                    </div>
+                    <div className="flex-1">
+                      <h6 className="font-semibold text-gray-800 mb-2">{step.action}</h6>
+                      <p className="text-sm text-gray-700 mb-2">{step.detail}</p>
+                      
+                      {step.warning && (
+                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200 mb-2">
+                          ⚠️ {step.warning}
+                        </div>
+                      )}
+                      
+                      {step.visual_clue && (
+                        <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200 mb-2">
+                          👁️ 视觉提示: {step.visual_clue}
+                        </div>
+                      )}
+                      
+                      {step.success_sign && (
+                        <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200 mb-2">
+                          ✅ 成功标志: {step.success_sign}
+                        </div>
+                      )}
+                      
+                      {step.pro_tip && (
+                        <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+                          💡 专业技巧: {step.pro_tip}
+                        </div>
+                      )}
+                      
+                      {step.purpose && (
+                        <div className="text-xs text-purple-600 bg-purple-50 p-2 rounded border border-purple-200">
+                          🎯 目的: {step.purpose}
+                        </div>
+                      )}
+                      
+                      {step.timing && (
+                        <div className="text-xs text-indigo-600 bg-indigo-50 p-2 rounded border border-indigo-200">
+                          ⏱️ 时间控制: {step.timing}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Step 5: Generate Routine */}
+      <div className="text-center mt-16">
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <span className="text-2xl">5️⃣</span>
+          <h2 className="text-2xl font-bold text-gray-800">生成训练计划！</h2>
+          <span className="text-2xl">💪</span>
+        </div>
+        <Button
+          onClick={generateExerciseRoutine}
+          className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+        >
+          🏋️ 查看训练视频
+        </Button>
+      </div>
+
+      {/* Bonus Section */}
+      <div className="mt-16 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
+        <div className="text-center mb-4">
+          <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            💡 健身小贴士
+          </h3>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
+          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold text-gray-800 mb-2">运动前热身</div>
+            <div className="text-gray-600">5-10分钟动态拉伸</div>
+          </div>
+          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold text-gray-800 mb-2">运动后放松</div>
+            <div className="text-gray-600">静态拉伸15分钟</div>
+          </div>
+          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+            <div className="font-semibold text-gray-800 mb-2">补充水分</div>
+            <div className="text-gray-600">运动中少量多次</div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Header */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            生活指南助手
+          </h1>
+          <p className="text-xl text-gray-600 mb-6">
+            选择你感兴趣的模块，开始探索吧！
+          </p>
+          
+          {/* Version Info and Social Links */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-white/20 max-w-md mx-auto">
+            <div className="text-sm text-gray-600 mb-3">
+              当前版本 v1.0.0（{getCurrentDate()}）
+            </div>
+            <div className="flex items-center justify-center gap-6 text-sm">
+              <a 
+                href="https://github.com/forsakens0ul" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+              >
+                <Github className="w-4 h-4" />
+                GitHub主页
+              </a>
+              <span className="text-gray-400">by</span>
+              <a 
+                href="https://www.chalice.lol/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+              >
+                <Globe className="w-4 h-4" />
+                forsakensoul
+              </a>
+              <div className="relative group">
+                <div className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 cursor-pointer">
+                  <MessageCircle className="w-4 h-4" />
+                  公众号
+                </div>
+                {/* QR Code Tooltip */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                  <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
+                    <div className="text-xs text-gray-600 mb-2 text-center whitespace-nowrap">扫码关注公众号</div>
+                    <img 
+                      src="/data/wechatQR.jpg" 
+                      alt="微信公众号二维码" 
+                      className="w-24 h-24 object-contain"
+                    />
+                  </div>
+                  {/* Arrow */}
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20">
+            <div className="flex gap-2">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                      flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200
+                      ${isActive 
+                        ? 'bg-white text-gray-800 shadow-md scale-105' 
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-white/50'
+                      }
+                    `}
+                  >
+                    <Icon className={`w-5 h-5 ${isActive ? `text-${tab.color}-600` : ''}`} />
+                    <span className="whitespace-nowrap">{tab.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Module Content */}
+        <div className="max-w-4xl mx-auto">
+          {activeTab === 0 && renderCoffeeModule()}
+          {activeTab === 1 && renderTeaModule()}
+          {activeTab === 2 && renderExerciseModule()}
+        </div>
+      </div>
+    </div>
   );
 }
