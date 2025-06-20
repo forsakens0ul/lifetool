@@ -1,5 +1,6 @@
 # 生活指南助手 Life Guide Assistant
-![image](https://github.com/user-attachments/assets/beaaa22d-418d-4278-a19c-795481fff030)
+![image](https://github.com/user-attachments/assets/f2fb0aee-c005-4018-b945-8b7e81a54df9)
+
 
 一个多功能的生活搭配探索小工具，支持咖啡冲煮、茶艺对照、锻炼训练等模块 —— 鼓励你在日常中体验生活的仪式感 ✨
 
@@ -18,6 +19,7 @@
 - 模式二：**随便练练卡牌** → 一键抽取今日随机练习计划，轻松动起来。
 
 ---
+![image](https://github.com/user-attachments/assets/9826268e-da15-477f-8f9c-f759d1e8b839)
 
 ## 🛠 技术栈
 
