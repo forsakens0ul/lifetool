@@ -1,101 +1,97 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, Users, Star, Thermometer, Timer, AlertTriangle } from 'lucide-react';
+import { Thermometer } from 'lucide-react';
 
-interface CoffeeIngredient {
-  name: string;
-  amount: string;
-  note: string;
-}
+// 咖啡相关数据
+const coffeeTypes = [
+  { id: 'espresso', name: '意式浓缩', emoji: '☕', description: '浓郁醇厚' },
+  { id: 'americano', name: '美式咖啡', emoji: '🇺🇸', description: '清淡顺滑' },
+  { id: 'latte', name: '拿铁', emoji: '🥛', description: '奶香浓郁' },
+  { id: 'cappuccino', name: '卡布奇诺', emoji: '☁️', description: '奶泡丰富' },
+  { id: 'mocha', name: '摩卡', emoji: '🍫', description: '巧克力风味' },
+  { id: 'macchiato', name: '玛奇朵', emoji: '🎨', description: '层次分明' }
+];
 
-interface CoffeeStep {
-  step: number;
-  action: string;
-  detail: string;
-  warning?: string;
-  pro_tip?: string;
-  success_sign?: string;
-  visual_clue?: string;
-  purpose?: string;
-  time_control?: string;
-  timing?: string;
-  technique?: string;
-  drink_tip?: string;
-  sound_clue?: string;
-  temp_target?: string;
-  effect?: string;
-  check?: string;
-  tool?: string;
-  visual_check?: string;
-  abnormal?: string;
-  output?: string;
-}
+const brewMethods = [
+  { id: 'espresso_machine', name: '意式机', emoji: '⚡', description: '高压萃取' },
+  { id: 'french_press', name: '法压壶', emoji: '🫖', description: '浸泡萃取' },
+  { id: 'pour_over', name: '手冲', emoji: '💧', description: '滴滤萃取' },
+  { id: 'aeropress', name: '爱乐压', emoji: '🔄', description: '压力萃取' },
+  { id: 'moka_pot', name: '摩卡壶', emoji: '🏺', description: '蒸汽萃取' },
+  { id: 'cold_brew', name: '冷萃', emoji: '🧊', description: '冷水萃取' }
+];
 
-interface CoffeeRecipe {
-  id: number;
-  name: string;
-  difficulty: string;
-  time: string;
-  servings: string;
-  description: string;
-  emoji: string;
-  subtitle: string;
-  warning?: string;
-  safety?: string[];
-  tools: string[];
-  ingredients: CoffeeIngredient[];
-  steps: CoffeeStep[];
-}
-
-interface CoffeeData {
-  coffee_recipes: CoffeeRecipe[];
-  pro_tips: Record<string, string>;
-  metadata: {
-    temperature_guide: Record<string, string>;
-    conversion_tools: Record<string, string>;
-  };
-}
+const coffeeAddons = [
+  { id: 'milk', name: '牛奶', emoji: '🥛' },
+  { id: 'sugar', name: '糖', emoji: '🍬' },
+  { id: 'cream', name: '奶油', emoji: '🍦' },
+  { id: 'syrup', name: '糖浆', emoji: '🍯' },
+  { id: 'cinnamon', name: '肉桂', emoji: '🌿' },
+  { id: 'vanilla', name: '香草', emoji: '🌸' }
+];
 
 export default function CoffeeGuide() {
-  const [coffeeData, setCoffeeData] = useState<CoffeeData | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<CoffeeRecipe | null>(null);
-  const [activeTab, setActiveTab] = useState('recipes');
+  const [selectedCoffeeType, setSelectedCoffeeType] = useState<string>('');
+  const [selectedBrewMethod, setSelectedBrewMethod] = useState<string>('');
+  const [selectedCoffeeAddons, setSelectedCoffeeAddons] = useState<string[]>([]);
 
-  useEffect(() => {
-    fetch('/data/coffee_recommendations.json')
-      .then(response => response.json())
-      .then((data: CoffeeData) => {
-        setCoffeeData(data);
-        if (data.coffee_recipes.length > 0) {
-          setSelectedRecipe(data.coffee_recipes[0]);
-        }
-      })
-      .catch(error => console.error('Error loading coffee data:', error));
-  }, []);
+  // 生成咖啡配方
+  const generateCoffeeRecipe = () => {
+    if (!selectedCoffeeType || !selectedBrewMethod) return null;
 
-  if (!coffeeData) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
-          <p className="text-muted-foreground">加载咖啡指南中...</p>
-        </div>
-      </div>
-    );
-  }
+    const coffeeType = coffeeTypes.find(c => c.id === selectedCoffeeType);
+    const brewMethod = brewMethods.find(b => b.id === selectedBrewMethod);
+    const selectedAddonItems = coffeeAddons.filter(a => selectedCoffeeAddons.includes(a.id));
 
-  const getDifficultyColor = (difficulty: string) => {
-    const stars = difficulty.split('★').length - 1;
-    if (stars <= 1) return 'bg-green-100 text-green-800';
-    if (stars <= 2) return 'bg-yellow-100 text-yellow-800';
-    if (stars <= 3) return 'bg-orange-100 text-orange-800';
-    return 'bg-red-100 text-red-800';
+    if (!coffeeType || !brewMethod) return null;
+
+    // 根据咖啡类型和冲泡方法生成参数
+    const getBrewParams = () => {
+      const params = {
+        ratio: '1:15',
+        temperature: '90-95°C',
+        time: '3-4分钟',
+        grind: '中等研磨'
+      };
+
+      if (brewMethod.id === 'espresso_machine') {
+        params.ratio = '1:2';
+        params.temperature = '90-94°C';
+        params.time = '25-30秒';
+        params.grind = '细研磨';
+      } else if (brewMethod.id === 'french_press') {
+        params.ratio = '1:12';
+        params.temperature = '90-95°C';
+        params.time = '4分钟';
+        params.grind = '粗研磨';
+      } else if (brewMethod.id === 'pour_over') {
+        params.ratio = '1:16';
+        params.temperature = '88-92°C';
+        params.time = '2.5-3.5分钟';
+        params.grind = '中细研磨';
+      } else if (brewMethod.id === 'cold_brew') {
+        params.ratio = '1:8';
+        params.temperature = '室温';
+        params.time = '12-24小时';
+        params.grind = '粗研磨';
+      }
+
+      return params;
+    };
+
+    return {
+      coffeeType,
+      brewMethod,
+      addons: selectedAddonItems,
+      params: getBrewParams()
+    };
   };
+
+  const coffeeRecipe = generateCoffeeRecipe();
 
   return (
     <div className="space-y-8">
@@ -111,249 +107,162 @@ export default function CoffeeGuide() {
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="recipes">咖啡配方</TabsTrigger>
-          <TabsTrigger value="guide">冲煮指南</TabsTrigger>
-          <TabsTrigger value="tips">专业技巧</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="recipes" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 space-y-4">
-              <h3 className="text-lg font-semibold">选择咖啡配方</h3>
-              <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                {coffeeData.coffee_recipes.map((recipe) => (
-                  <Card 
-                    key={recipe.id}
-                    className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-                      selectedRecipe?.id === recipe.id ? 'ring-2 ring-amber-500 bg-amber-50' : ''
-                    }`}
-                    onClick={() => setSelectedRecipe(recipe)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <span className="text-2xl">{recipe.emoji}</span>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-sm leading-tight">{recipe.name}</h4>
-                          <p className="text-xs text-muted-foreground mt-1">{recipe.subtitle}</p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Badge variant="secondary" className={`text-xs ${getDifficultyColor(recipe.difficulty)}`}>
-                              {recipe.difficulty}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {recipe.time}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-2xl">☕</span>
+            自定义咖啡配方
+          </CardTitle>
+          <CardDescription>
+            选择咖啡类型、冲泡方法和添加物，生成专属配方
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* 咖啡类型选择 */}
+          <div>
+            <h4 className="font-semibold mb-3">1️⃣ 选择咖啡类型</h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {coffeeTypes.map((coffee) => (
+                <Button
+                  key={coffee.id}
+                  variant={selectedCoffeeType === coffee.id ? "default" : "outline"}
+                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  onClick={() => setSelectedCoffeeType(coffee.id)}
+                >
+                  <span className="text-2xl">{coffee.emoji}</span>
+                  <span className="text-sm">{coffee.name}</span>
+                  <span className="text-xs text-muted-foreground text-center">{coffee.description}</span>
+                </Button>
+              ))}
             </div>
+          </div>
 
-            <div className="lg:col-span-2">
-              {selectedRecipe && (
-                <Card className="h-fit">
-                  <CardHeader>
-                    <div className="flex items-start gap-4">
-                      <span className="text-4xl">{selectedRecipe.emoji}</span>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl">{selectedRecipe.name}</CardTitle>
-                        <CardDescription className="mt-2">{selectedRecipe.description}</CardDescription>
-                        
-                        <div className="flex flex-wrap gap-3 mt-4">
-                          <Badge className={getDifficultyColor(selectedRecipe.difficulty)}>
-                            <Star className="w-3 h-3 mr-1" />
-                            {selectedRecipe.difficulty}
-                          </Badge>
-                          <Badge variant="outline">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {selectedRecipe.time}
-                          </Badge>
-                          <Badge variant="outline">
-                            <Users className="w-3 h-3 mr-1" />
-                            {selectedRecipe.servings}
-                          </Badge>
-                        </div>
+          {/* 冲泡方法选择 */}
+          <div>
+            <h4 className="font-semibold mb-3">2️⃣ 选择冲泡方法</h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {brewMethods.map((method) => (
+                <Button
+                  key={method.id}
+                  variant={selectedBrewMethod === method.id ? "default" : "outline"}
+                  className="h-auto p-4 flex flex-col items-center gap-2"
+                  onClick={() => setSelectedBrewMethod(method.id)}
+                >
+                  <span className="text-2xl">{method.emoji}</span>
+                  <span className="text-sm text-center">{method.name}</span>
+                  <span className="text-xs text-muted-foreground text-center">{method.description}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
 
-                        {selectedRecipe.warning && (
-                          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                            <div className="flex items-start gap-2">
-                              <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-                              <div>
-                                <p className="text-sm font-medium text-yellow-800">{selectedRecipe.warning}</p>
-                                {selectedRecipe.safety && (
-                                  <ul className="mt-2 text-xs text-yellow-700 space-y-1">
-                                    {selectedRecipe.safety.map((item, index) => (
-                                      <li key={index}>• {item}</li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
+          {/* 添加物选择 */}
+          <div>
+            <h4 className="font-semibold mb-3">3️⃣ 选择添加物（可多选）</h4>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+              {coffeeAddons.map((addon) => (
+                <Button
+                  key={addon.id}
+                  variant={selectedCoffeeAddons.includes(addon.id) ? "default" : "outline"}
+                  className="h-auto p-3 flex flex-col items-center gap-1"
+                  onClick={() => {
+                    setSelectedCoffeeAddons(prev => 
+                      prev.includes(addon.id) 
+                        ? prev.filter(id => id !== addon.id)
+                        : [...prev, addon.id]
+                    );
+                  }}
+                >
+                  <span className="text-xl">{addon.emoji}</span>
+                  <span className="text-xs">{addon.name}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
 
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                          所需工具
-                        </h4>
-                        <ul className="space-y-2">
-                          {selectedRecipe.tools.map((tool, index) => (
-                            <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
-                              <span className="w-1 h-1 bg-muted-foreground rounded-full"></span>
-                              {tool}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                          材料清单
-                        </h4>
-                        <ul className="space-y-2">
-                          {selectedRecipe.ingredients.map((ingredient, index) => (
-                            <li key={index} className="text-sm">
-                              <div className="flex justify-between items-start">
-                                <span className="font-medium">{ingredient.name}</span>
-                                <span className="text-amber-600 font-medium">{ingredient.amount}</span>
-                              </div>
-                              {ingredient.note && (
-                                <p className="text-xs text-muted-foreground mt-1">{ingredient.note}</p>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
+          {/* 生成的配方 */}
+          {coffeeRecipe && (
+            <div className="mt-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
+              <h3 className="text-xl font-bold text-amber-800 mb-4 flex items-center gap-2">
+                <span className="text-2xl">☕</span>
+                你的专属咖啡配方
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{coffeeRecipe.coffeeType.emoji}</span>
                     <div>
-                      <h4 className="font-semibold mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                        制作步骤
-                      </h4>
-                      <div className="space-y-4">
-                        {selectedRecipe.steps.map((step, index) => (
-                          <div key={index} className="flex gap-4">
-                            <div className="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-sm font-semibold">
-                              {step.step}
-                            </div>
-                            <div className="flex-1 space-y-2">
-                              <h5 className="font-medium text-amber-700">{step.action}</h5>
-                              <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
-                              
-                              {step.warning && (
-                                <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
-                                  <strong>⚠️ 注意：</strong> {step.warning}
-                                </div>
-                              )}
-                              
-                              {step.pro_tip && (
-                                <div className="p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
-                                  <strong>💡 专业提示：</strong> {step.pro_tip}
-                                </div>
-                              )}
-                              
-                              {step.success_sign && (
-                                <div className="p-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
-                                  <strong>✅ 成功标志：</strong> {step.success_sign}
-                                </div>
-                              )}
+                      <h4 className="font-semibold text-amber-700">{coffeeRecipe.coffeeType.name}</h4>
+                      <p className="text-sm text-amber-600">{coffeeRecipe.coffeeType.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{coffeeRecipe.brewMethod.emoji}</span>
+                    <div>
+                      <h4 className="font-semibold text-amber-700">{coffeeRecipe.brewMethod.name}</h4>
+                      <p className="text-sm text-amber-600">{coffeeRecipe.brewMethod.description}</p>
+                    </div>
+                  </div>
 
-                              {step.visual_clue && (
-                                <div className="p-2 bg-purple-50 border border-purple-200 rounded text-xs text-purple-700">
-                                  <strong>👁️ 视觉提示：</strong> {step.visual_clue}
-                                </div>
-                              )}
-
-                              {step.time_control && (
-                                <div className="p-2 bg-orange-50 border border-orange-200 rounded text-xs text-orange-700 flex items-center gap-1">
-                                  <Timer className="w-3 h-3" />
-                                  <strong>时间控制：</strong> {step.time_control}
-                                </div>
-                              )}
-
-                              {step.abnormal && (
-                                <div className="p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-700">
-                                  <strong>🔧 异常处理：</strong> {step.abnormal}
-                                </div>
-                              )}
-                            </div>
-                          </div>
+                  {coffeeRecipe.addons.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-amber-700 mb-2">添加物</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {coffeeRecipe.addons.map((addon) => (
+                          <Badge key={addon.id} variant="secondary" className="bg-amber-100 text-amber-700">
+                            {addon.emoji} {addon.name}
+                          </Badge>
                         ))}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="p-4 bg-white rounded-lg border border-amber-200">
+                    <h4 className="font-semibold text-amber-700 mb-3 flex items-center gap-2">
+                      <Thermometer className="w-4 h-4" />
+                      冲泡参数
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">粉水比例</span>
+                        <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.ratio}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">水温</span>
+                        <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.temperature}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">时间</span>
+                        <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.time}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">研磨度</span>
+                        <span className="text-sm font-medium text-amber-600">{coffeeRecipe.params.grind}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-white rounded-lg border border-amber-200">
+                    <h4 className="font-semibold text-amber-700 mb-2">制作要点</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• 使用新鲜烘焙的咖啡豆</li>
+                      <li>• 控制好水温和萃取时间</li>
+                      <li>• 根据个人口味调整浓度</li>
+                      {coffeeRecipe.addons.length > 0 && (
+                        <li>• 添加物在咖啡制作完成后加入</li>
+                      )}
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="guide" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Thermometer className="w-5 h-5 text-amber-600" />
-                温度指南
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {Object.entries(coffeeData.metadata.temperature_guide).map(([method, temp]) => (
-                  <div key={method} className="flex justify-between items-center p-2 rounded bg-muted/50">
-                    <span className="font-medium">{method}</span>
-                    <span className="text-amber-600 font-semibold">{temp}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>换算工具</CardTitle>
-              <CardDescription>常用咖啡制作换算参考</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(coffeeData.metadata.conversion_tools).map(([conversion, note]) => (
-                  <div key={conversion} className="p-3 border rounded-lg">
-                    <h4 className="font-medium text-sm mb-1">{conversion}</h4>
-                    <p className="text-sm text-muted-foreground">{note}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="tips" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.entries(coffeeData.pro_tips).map(([title, tip]) => (
-              <Card key={title}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{tip}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
