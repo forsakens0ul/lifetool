@@ -1,0 +1,457 @@
+{
+  "sport_recipes": [
+    {
+      "id": 1,
+      "name": "动态热身套餐（5分钟版）",
+      "difficulty": "★☆☆☆☆",
+      "time": "5分钟",
+      "servings": "1人份",
+      "description": "提升心率激活关节",
+      "emoji": "🔥",
+      "subtitle": "提升心率激活关节",
+      "tools": ["瑜伽垫（可选）"],
+      "ingredients": [
+        {"name": "运动空间", "amount": "2×2米", "note": "客厅即可"},
+        {"name": "舒适运动服", "amount": "1套", "note": "透气材质最佳"},
+        {"name": "运动鞋", "amount": "1双", "note": "防滑鞋底"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "高抬腿踏步",
+          "detail": "膝盖抬至髋高，前脚掌着地，持续30秒",
+          "pro_tip": "想象在踢足球"
+        },
+        {
+          "step": 2,
+          "action": "侧向滑步",
+          "detail": "左右各15秒，避免脚尖内扣",
+          "pro_tip": "空间不足可原地模拟"
+        },
+        {
+          "step": 3,
+          "action": "弓步转体",
+          "detail": "每侧20秒，同时激活核心和下肢",
+          "visual_clue": "后膝离地2cm最佳"
+        },
+        {
+          "step": 4,
+          "action": "站姿体侧屈",
+          "detail": "左右各10秒，呼气时侧屈，吸气回正",
+          "pro_tip": "冬季热身延长至8分钟"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "办公室肩颈拯救方案",
+      "difficulty": "★☆☆☆☆",
+      "time": "3分钟",
+      "servings": "1人份",
+      "description": "缓解久坐僵硬",
+      "emoji": "💻",
+      "subtitle": "缓解久坐僵硬",
+      "tools": ["椅子"],
+      "ingredients": [
+        {"name": "办公椅", "amount": "1把", "note": "有靠背的椅子"},
+        {"name": "办公桌", "amount": "1张", "note": "稳固桌面"},
+        {"name": "墙面", "amount": "1面", "note": "用于支撑"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "下巴后缩",
+          "detail": "10次，想象用下巴夹住网球",
+          "purpose": "纠正头前倾"
+        },
+        {
+          "step": 2,
+          "action": "坐姿天使",
+          "detail": "8次，手背全程贴墙滑动",
+          "purpose": "激活中下斜方肌"
+        },
+        {
+          "step": 3,
+          "action": "椅子撑体",
+          "detail": "15秒，手扶桌沿防椅子滑动",
+          "warning": "抬腿可增加难度"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "家庭哑铃塑形（水瓶替代版）",
+      "difficulty": "★★☆☆☆",
+      "time": "20分钟",
+      "servings": "1人份",
+      "description": "全身肌耐力训练",
+      "emoji": "💪",
+      "subtitle": "全身肌耐力训练",
+      "tools": ["500ml水瓶×2", "毛巾"],
+      "ingredients": [
+        {"name": "500ml水瓶", "amount": "2个", "note": "装80%水量"},
+        {"name": "毛巾", "amount": "1条", "note": "长度约1米"},
+        {"name": "稳固矮凳", "amount": "1个", "note": "高度约30cm"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "水瓶推举",
+          "detail": "3组×12次，大臂与身体呈45°",
+          "pro_tip": "水量决定负重"
+        },
+        {
+          "step": 2,
+          "action": "毛巾划船",
+          "detail": "3组×15次，脚踩毛巾中段双手拉两端",
+          "purpose": "锻炼背部中缝"
+        },
+        {
+          "step": 3,
+          "action": "保加利亚分腿蹲",
+          "detail": "每侧2组×10次，后脚搭在稳固矮凳上",
+          "pro_tip": "扶墙保持稳定，组间休息45秒"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "跑后拉伸套餐（防粗腿版）",
+      "difficulty": "★☆☆☆☆",
+      "time": "10分钟",
+      "servings": "1人份",
+      "description": "放松下肢筋膜",
+      "emoji": "🏃",
+      "subtitle": "放松下肢筋膜",
+      "tools": ["泡沫轴（可用酒瓶代替）"],
+      "ingredients": [
+        {"name": "泡沫轴", "amount": "1个", "note": "可用酒瓶代替"},
+        {"name": "瑜伽垫", "amount": "1张", "note": "保护膝盖"},
+        {"name": "毛巾", "amount": "1条", "note": "垫膝盖用"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "股四头肌跪姿拉伸",
+          "detail": "每侧30秒，垫毛巾保护膝盖",
+          "pro_tip": "抓住脚背向臀部加压"
+        },
+        {
+          "step": 2,
+          "action": "小腿筋膜松解",
+          "detail": "每侧1分钟，酒瓶横向滚动",
+          "warning": "体重控制在可忍受的7分痛"
+        },
+        {
+          "step": 3,
+          "action": "青蛙趴静态保持",
+          "detail": "45秒，每周增加5秒时长",
+          "success_sign": "大腿内侧离地高度降低"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "补水电解质饮（自制版）",
+      "difficulty": "★☆☆☆☆",
+      "time": "2分钟",
+      "servings": "1人份",
+      "description": "运动中补充能量",
+      "emoji": "💧",
+      "subtitle": "运动中补充能量",
+      "tools": ["运动水壶", "量勺"],
+      "ingredients": [
+        {"name": "温水", "amount": "500ml", "note": "40℃最佳吸收"},
+        {"name": "柠檬汁", "amount": "20ml", "note": "约1/2个柠檬"},
+        {"name": "蜂蜜", "amount": "15ml", "note": "提供快速碳水"},
+        {"name": "食盐", "amount": "0.5g", "note": "牙签尖蘸3下"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "混合材料",
+          "detail": "所有材料倒入水壶摇匀",
+          "pro_tip": "钠钾比例≈3:1模拟体液"
+        },
+        {
+          "step": 2,
+          "action": "分次饮用",
+          "detail": "每15分钟饮用100ml",
+          "timing": "运动前中后都可饮用"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "睡前放松序列（助眠版）",
+      "difficulty": "★☆☆☆☆",
+      "time": "8分钟",
+      "servings": "1人份",
+      "description": "副交感神经激活",
+      "emoji": "😴",
+      "subtitle": "副交感神经激活",
+      "tools": ["瑜伽垫", "毛巾"],
+      "ingredients": [
+        {"name": "昏暗灯光", "amount": "适量", "note": "营造放松氛围"},
+        {"name": "舒缓音乐", "amount": "可选", "note": "轻音乐或自然音"},
+        {"name": "折叠毛巾", "amount": "1条", "note": "垫额头用"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "4-7-8呼吸法",
+          "detail": "5轮，吸气4秒→屏息7秒→呼气8秒",
+          "pro_tip": "舌尖顶住上颚"
+        },
+        {
+          "step": 2,
+          "action": "仰卧脊柱扭转",
+          "detail": "每侧1分钟，眼睛看向反方向",
+          "pro_tip": "呼气时加深扭转"
+        },
+        {
+          "step": 3,
+          "action": "婴儿式冥想",
+          "detail": "3分钟，额头垫折叠毛巾",
+          "pro_tip": "想象呼吸在背部起伏"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "八段锦·双手托天理三焦",
+      "difficulty": "★☆☆☆☆",
+      "time": "3分钟",
+      "servings": "1人份",
+      "description": "拉长脊椎调理气血",
+      "emoji": "🙏",
+      "subtitle": "拉长脊椎调理气血",
+      "tools": ["平坦地面"],
+      "ingredients": [
+        {"name": "宽敞空间", "amount": "1×2米", "note": "能伸展双臂"},
+        {"name": "舒适服装", "amount": "1套", "note": "宽松透气"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预备式",
+          "detail": "双脚平行站立，与肩同宽，两臂自然下垂",
+          "pro_tip": "目视前方，保持自然呼吸"
+        },
+        {
+          "step": 2,
+          "action": "托掌上举",
+          "detail": "双手掌心相对，慢慢向上托起至头顶，踮起脚跟",
+          "pro_tip": "上托时吸气，抬头目视手掌"
+        },
+        {
+          "step": 3,
+          "action": "下落按掌",
+          "detail": "双手缓缓下落至胸口，掌心向下，脚跟轻轻着地",
+          "pro_tip": "下落时呼气，低头目视胸口"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "八段锦·左右开弓似射雕",
+      "difficulty": "★★☆☆☆",
+      "time": "4分钟",
+      "servings": "1人份",
+      "description": "缓解胸闷肩颈酸痛",
+      "emoji": "🏹",
+      "subtitle": "缓解胸闷肩颈酸痛",
+      "tools": ["平坦地面"],
+      "ingredients": [
+        {"name": "宽敞空间", "amount": "2×2米", "note": "能做弓步动作"},
+        {"name": "防滑鞋", "amount": "1双", "note": "保持稳定"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预备式",
+          "detail": "左脚跨出一大步，身体下蹲成骑马式",
+          "pro_tip": "保持背部挺直"
+        },
+        {
+          "step": 2,
+          "action": "拉弓式",
+          "detail": "左手呈八字掌向左推出，右手握拳向右平拉",
+          "pro_tip": "展臂及拉弓时吸气，头左转目视左手食指"
+        },
+        {
+          "step": 3,
+          "action": "复原换侧",
+          "detail": "收回动作，换右侧重复",
+          "pro_tip": "复原时呼气，沉肩坠肘"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "八段锦·调理脾胃须单举",
+      "difficulty": "★☆☆☆☆",
+      "time": "3分钟",
+      "servings": "1人份",
+      "description": "增强脾胃功能",
+      "emoji": "🤲",
+      "subtitle": "增强脾胃功能",
+      "tools": ["平坦地面"],
+      "ingredients": [
+        {"name": "站立空间", "amount": "1×1米", "note": "能举手即可"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预备式",
+          "detail": "双脚平行站立，与肩同宽",
+          "pro_tip": "保持自然站姿"
+        },
+        {
+          "step": 2,
+          "action": "单举手",
+          "detail": "右手翻掌上举，掌心向上，左手下按，掌心向下",
+          "pro_tip": "上举下按时吸气，掌根用力"
+        },
+        {
+          "step": 3,
+          "action": "交替进行",
+          "detail": "双手交替进行，舒展两腋",
+          "pro_tip": "复原时呼气，改善胃酸过多"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "八段锦·五劳七伤往后瞧",
+      "difficulty": "★☆☆☆☆",
+      "time": "2分钟",
+      "servings": "1人份",
+      "description": "缓解肩颈僵硬",
+      "emoji": "👀",
+      "subtitle": "缓解肩颈僵硬",
+      "tools": ["平坦地面"],
+      "ingredients": [
+        {"name": "站立空间", "amount": "1×1米", "note": "能转头即可"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预备式",
+          "detail": "双脚平行站立，两手掌心贴腿旁",
+          "pro_tip": "指尖向下"
+        },
+        {
+          "step": 2,
+          "action": "转头后瞧",
+          "detail": "头部缓慢左转，目视左后方",
+          "pro_tip": "向后望时吸气，转头不转体"
+        },
+        {
+          "step": 3,
+          "action": "右转重复",
+          "detail": "再右转目视右后方，回正时呼气",
+          "pro_tip": "刺激督脉提升阳气"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "八段锦·摇头摆尾去心火",
+      "difficulty": "★★★☆☆",
+      "time": "5分钟",
+      "servings": "1人份",
+      "description": "降心火改善情绪",
+      "emoji": "🌊",
+      "subtitle": "降心火改善情绪",
+      "warning": "⚠️ 动作较复杂，量力而行",
+      "safety": [
+        "腰部有伤者慎做",
+        "高血压患者避免过度前俯",
+        "感到头晕立即停止"
+      ],
+      "tools": ["平坦地面"],
+      "ingredients": [
+        {"name": "宽敞空间", "amount": "2×2米", "note": "能做圆环转腰"},
+        {"name": "防滑垫", "amount": "1张", "note": "防止滑倒"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预备式",
+          "detail": "两脚分开约三足底长度，屈膝半蹲成骑马势",
+          "warning": "膝盖不要超过脚尖"
+        },
+        {
+          "step": 2,
+          "action": "摇头摆尾",
+          "detail": "头部及上体前俯，作圆环形转腰，臀部适当摆动",
+          "pro_tip": "转腰时吸气，复原时呼气"
+        },
+        {
+          "step": 3,
+          "action": "反向重复",
+          "detail": "换反方向继续转腰",
+          "pro_tip": "改善情绪暴躁、长暗疮"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "八段锦·两手攀足固肾腰",
+      "difficulty": "★★☆☆☆",
+      "time": "3分钟",
+      "servings": "1人份",
+      "description": "强筋骨固腰肾",
+      "emoji": "🦴",
+      "subtitle": "强筋骨固腰肾",
+      "tools": ["平坦地面"],
+      "ingredients": [
+        {"name": "站立空间", "amount": "1×2米", "note": "能弯腰够脚"}
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "action": "预备式",
+          "detail": "双脚并拢站立，两臂自然下垂",
+          "pro_tip": "保持自然呼吸"
+        },
+        {
+          "step": 2,
+          "action": "下蹲攀足",
+          "detail": "双手交叉于胸前，屈膝下蹲，双手沿腿下滑至脚趾",
+          "pro_tip": "弯腰时呼气，膝关节伸直"
+        },
+        {
+          "step": 3,
+          "action": "起身复原",
+          "detail": "双臂带动上身直立",
+          "pro_tip": "起身时吸气，不要低头"
+        }
+      ]
+    }
+  ],
+  "pro_tips": {
+    "强度控制": "RPE4-5（轻松交谈）适合初级，RPE6-7（短句回答）适合中级",
+    "器材替代": "哑铃可用米袋替代，弹力带可用连裤袜打结",
+    "安全提醒": "疼痛是停止信号，饭后1.5小时再运动"
+  },
+  "metadata": {
+    "intensity_guide": {
+      "初级": "RPE4-5（轻松交谈）",
+      "中级": "RPE6-7（短句回答）",
+      "高级": "RPE8-9（无法说话）"
+    },
+    "equipment_hacks": {
+      "哑铃替代": "米袋/宠物粮袋",
+      "弹力带": "连裤袜打结",
+      "瑜伽砖": "字典/厚书本"
+    },
+    "practice_frequency": {
+      "热身": "每次运动前必做",
+      "力量训练": "隔天进行，每周3-4次",
+      "拉伸": "每天可做，运动后必做",
+      "八段锦": "每天早晚各一次"
+    }
+  }
+}
