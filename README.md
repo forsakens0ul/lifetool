@@ -5,6 +5,8 @@
 一个多功能的生活搭配探索小工具，支持咖啡冲煮、茶艺对照、锻炼训练等模块 —— 鼓励你在日常中体验生活的仪式感 ✨
 <img width="324" alt="微信图片_20250620101556" src="https://github.com/user-attachments/assets/a574c733-e505-41a8-a210-ec7444dfd7a5" />
 ![wechatQR](https://github.com/user-attachments/assets/fd25cfc1-e745-4f97-aaaa-32d156d127ce)
+
+---
 点个关注喵😸 永雏塔菲谢谢你喵😽
 
 ## 🧩 功能模块
