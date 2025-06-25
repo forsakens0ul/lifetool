@@ -279,7 +279,7 @@ export default function Home() {
 
   // Auto-generate tea recipe when selections are complete
   useEffect(() => {
-    if (teaSelections.teaTypes.length > 0 && teaSelections.brewMethods.length > 0 && teaRecipes.length > 0) {
+    if (teaSelections.teaTypes && teaSelections.brewMethods && teaRecipes.length > 0) {
       generateTeaRecipe();
     } else {
       setGeneratedTeaRecipe('');
@@ -319,14 +319,6 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
   }));
 };
   
-  const toggleTeaSelection = (category: keyof TeaSelections, value: string) => {
-    setTeaSelections(prev => ({
-      ...prev,
-      [category]: prev[category].includes(value)
-        ? prev[category].filter(item => item !== value)
-        : [...prev[category], value]
-    }));
-  };
 
   const toggleExerciseSelection = (category: keyof ExerciseSelections, value: string) => {
     setExerciseSelections(prev => ({
@@ -423,8 +415,8 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
       'quick': '快速冲泡'
     };
 
-    const primaryTea = teaTypes[0];
-    const primaryBrew = brewMethods[0];
+    const primaryTea = teaTypes.length > 0 ? teaTypes[0] : '';
+    const primaryBrew = brewMethods.length > 0 ? brewMethods[0] : '';
     
     const teaInfo = teaNames[primaryTea] || { name: '茶饮', description: '香醇的茶饮' };
     const brewMethod = brewNames[primaryBrew] || '传统冲泡';
@@ -483,7 +475,7 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
   };
 
   const generateTeaRecipe = () => {
-    if (teaSelections.teaTypes.length === 0 || teaSelections.brewMethods.length === 0) {
+    if (!teaSelections.teaTypes || !teaSelections.brewMethods) {
       return;
     }
 
@@ -506,12 +498,12 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
       'quick': '快速冲泡'
     };
 
-    const primaryTea = teaTypeMap[teaSelections.teaTypes[0]] || '绿茶';
-    const primaryBrew = brewMethodMap[teaSelections.brewMethods[0]] || '玻璃杯';
+    const primaryTea = teaTypeMap[teaSelections.teaTypes] || '绿茶';
+    const primaryBrew = brewMethodMap[teaSelections.brewMethods] || '玻璃杯';
     
     // If no accessories selected, use "不加"
-    const accessoriesToCheck = teaSelections.accessories.length > 0 && !teaSelections.accessories.includes('none') 
-      ? teaSelections.accessories : ['不加'];
+    const accessoriesToCheck = teaSelections.accessories && teaSelections.accessories !== 'none' 
+      ? [teaSelections.accessories] : ['不加'];
     
     // Map accessories to recipe format
     const accessoryMap: { [key: string]: string } = {
@@ -537,9 +529,9 @@ const setTeaTool = (category: keyof TeaSelections, value: string) => {
       
       // Get tea name and description based on selections
       const { name, description } = getTeaNameAndDescription(
-        teaSelections.teaTypes, 
-        teaSelections.brewMethods, 
-        teaSelections.accessories
+        teaSelections.teaTypes ? [teaSelections.teaTypes] : [],
+        teaSelections.brewMethods ? [teaSelections.brewMethods] : [],
+        teaSelections.accessories ? [teaSelections.accessories] : []
       );
       setTeaTitle(name);
       setTeaDescription(description);
