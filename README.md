@@ -2,7 +2,8 @@
 
 一个多功能的生活搭配探索小工具，支持咖啡冲煮、茶艺对照、锻炼训练等模块 —— 鼓励你在日常中体验生活的仪式感 ✨
 
-![image.png](attachment:f65770e0-a79c-47a2-8d2b-d22c9ba22ccb:image.png)
+![image](https://github.com/user-attachments/assets/5caf57ae-5942-4c59-bab5-25de5916527c)
+
 
 ---
 ![wechatQR](https://github.com/user-attachments/assets/eed84d09-ad05-42de-aa45-f9364cc92ec4)|<img width="324" alt="微信图片_20250620101556" src="https://github.com/user-attachments/assets/a1c83350-84ab-4a10-a047-fb7d5008fd8f" />
@@ -38,7 +39,8 @@
 - 模式二：**随便练练卡牌** → 一键抽取今日随机练习计划，轻松动起来。
 - 
 
-![image.png](attachment:3bee035e-ff05-4d69-9cc3-e53363802127:image.png)
+![image](https://github.com/user-attachments/assets/5cae5b06-8f92-496c-9dba-01b6024cdc1a)
+
 
 ---
 
