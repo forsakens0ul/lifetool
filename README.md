@@ -56,8 +56,8 @@
 ## 📦 快速体验
 
 ```bash
-git clone <https://github.com/yourname/life-guide-assistant.git>
-cd life-guide-assistant
+git clone [<https://github.com/yourname/life-guide-assistant.git>](https://github.com/forsakens0ul/lifetool/)
+cd lifetool
 npm install
 npm run dev
 
